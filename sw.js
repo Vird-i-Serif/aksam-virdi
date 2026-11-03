@@ -1,5 +1,5 @@
 // Akşam Virdi: internetsiz açılma. Dosya güncellenince SURUM'u bir artır.
-const SURUM = "v1";
+const SURUM = "v2";
 const CACHE = "aksam-virdi-" + SURUM;
 const DOSYALAR = ["./", "index.html", "manifest.webmanifest", "kapak.jpg", "tac.webp",
   "icon-192.png", "icon-512.png", "icon-maskable-512.png", "apple-touch-icon.png", "favicon.png"];
