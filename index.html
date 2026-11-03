@@ -137,6 +137,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sesbtn{font-family:var(--f-ui);font-size:14px;font-weight:500;padding:8px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
 .seshint{font-size:12.5px;color:var(--muted)}
 #sesbilgi{font-size:13px;color:var(--olive)}
+.devam{position:absolute;z-index:2;right:calc(max(14px,env(safe-area-inset-right,0px)) + 46px);bottom:22px;height:38px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,205,40,.6);background:rgba(12,30,29,.45);color:var(--cover-gold);font:600 14px/1 var(--f-ui);cursor:pointer}
+.devam:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
 .ses:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
 
 
@@ -164,6 +166,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <section class="cover" aria-label="Kapak">
   <button class="ses" id="ses" type="button" hidden aria-pressed="false" aria-label="Giriş sesini kapat">🔊</button>
+  <button class="devam" id="devam" type="button" hidden aria-label="Eseri dinlemeye devam et">▶ Devam</button>
   <div class="cover-in">
     <div class="issue"><span>Günlük Evrâd</span><span>Akşam Virdi</span></div>
     <img class="tac" src="tac.webp" alt="Yâ Hazret-i Pîr Seyyid Sultan Muhammed Nûreddîn el-Cerrâhî kaddesallâhu sırrahu'l-Fettâhî">
@@ -686,6 +689,8 @@ document.addEventListener("visibilitychange", () => {
 (function(){
   const SURE = 25, ACILIS = 3, KAPANIS = 8, SES = 0.7;
   const btn = document.getElementById("ses");
+  const devam = document.getElementById("devam");
+  let serbest = false;
   const dosya = document.getElementById("sesdosya");
   const kaldir = document.getElementById("seskaldir");
   const bilgi = document.getElementById("sesbilgi");
@@ -721,7 +726,7 @@ document.addEventListener("visibilitychange", () => {
     if (t < ACILIS) v = SES * t / ACILIS;
     else if (t > SURE - KAPANIS) v = SES * Math.max(0, (SURE - t) / KAPANIS);
     a.volume = Math.max(0, Math.min(1, v));
-    if (t >= SURE || a.ended) { a.pause(); bitti = true; return; }
+    if (t >= SURE || a.ended) { a.pause(); bitti = true; devam.hidden = a.ended; devam.textContent = "▶ Devam"; return; }
     raf = requestAnimationFrame(adim);
   }
   function cal(){
@@ -729,8 +734,7 @@ document.addEventListener("visibilitychange", () => {
     a.volume = 0;
     a.play().then(() => {
       basladi = true; t0 = performance.now(); raf = requestAnimationFrame(adim);
-      document.removeEventListener("pointerdown", cal, true);
-      document.removeEventListener("keydown", cal, true);
+      ["click", "touchend", "keydown"].forEach(t => document.removeEventListener(t, cal, true));
     }).catch(() => {});
   }
   function kur(blob){
@@ -739,11 +743,10 @@ document.addEventListener("visibilitychange", () => {
     if (url) { a.src = url; a.load(); } else { a.removeAttribute("src"); }
     goster();
   }
-  oku().then(r => { if (r && r.blob) { kur(r.blob); bilgi.textContent = r.ad ? "Seçili: " + r.ad : ""; cal(); } else goster(); }).catch(() => goster());
-  document.addEventListener("pointerdown", cal, true);
-  document.addEventListener("keydown", cal, true);
+  oku().then(r => { const b = r && (r.veri ? new Blob([r.veri], { type: r.tur || "audio/mpeg" }) : r.blob); if (b) { kur(b); bilgi.textContent = r.ad ? "Seçili: " + r.ad : ""; cal(); } else goster(); }).catch(() => goster());
+  ["click", "touchend", "keydown"].forEach(t => document.addEventListener(t, cal, true));
 
-  dosya.addEventListener("change", async () => {
+  dosya.addEventListener("change", () => {
     const f = dosya.files && dosya.files[0];
     if (!f) return;
     if (!(/^audio\//.test(f.type) || /\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name))) {
@@ -751,25 +754,44 @@ document.addEventListener("visibilitychange", () => {
       dosya.value = "";
       return;
     }
-    try {
-      await yaz({ blob: f, ad: f.name });
-      kur(f);
-      bilgi.textContent = "Seçili: " + f.name;
-      kapali = false; try { localStorage.setItem("girisSesi", "acik"); } catch (e) {}
-      basladi = false; bitti = false; cancelAnimationFrame(raf); a.currentTime = 0; cal();
-    } catch (e) { bilgi.textContent = "Ses kaydedilemedi, tekrar dene."; }
+    // iPhone sesi ancak dokunma anında çaldırıyor: önce hemen çal, sonra arkada kaydet
+    bilgi.textContent = "Seçili: " + f.name;
+    kapali = false; try { localStorage.setItem("girisSesi", "acik"); } catch (e) {}
+    kur(f);
+    basladi = false; bitti = false; cancelAnimationFrame(raf);
+    cal();
+    const tur = f.type || "audio/mpeg", ad = f.name;
+    const okuyucu = new FileReader();
+    okuyucu.onload = () => {
+      yaz({ veri: okuyucu.result, tur, ad }).catch(() => { bilgi.textContent = "Ses çalıyor ama bu telefonda saklanamadı."; });
+    };
+    okuyucu.onerror = () => { bilgi.textContent = "Ses çalıyor ama bu telefonda saklanamadı."; };
+    okuyucu.readAsArrayBuffer(f);
     dosya.value = "";
   });
+  devam.addEventListener("click", e => {
+    e.stopPropagation();
+    cancelAnimationFrame(raf);
+    if (a.paused) {
+      serbest = true; bitti = true;
+      a.volume = SES;
+      a.play().then(() => { devam.textContent = "⏸ Durdur"; }).catch(() => {});
+    } else {
+      a.pause(); devam.textContent = "▶ Devam";
+    }
+  });
+  a.addEventListener("ended", () => { devam.hidden = true; });
   kaldir.addEventListener("click", async () => {
     cancelAnimationFrame(raf); a.pause();
     try { await yaz(null); } catch (e) {}
-    kur(null); bilgi.textContent = "Giriş sesi kaldırıldı.";
+    kur(null); devam.hidden = true; bilgi.textContent = "Giriş sesi kaldırıldı.";
   });
   btn.addEventListener("click", e => {
     e.stopPropagation();
     kapali = !kapali;
     try { localStorage.setItem("girisSesi", kapali ? "kapali" : "acik"); } catch (er) {}
-    if (kapali) { cancelAnimationFrame(raf); a.pause(); bitti = true; }
+    if (kapali) { cancelAnimationFrame(raf); a.pause(); bitti = true; devam.hidden = true; }
+    else { cancelAnimationFrame(raf); a.pause(); try { a.currentTime = 0; } catch (er) {} basladi = false; bitti = false; cal(); }
     goster();
   });
 })();
