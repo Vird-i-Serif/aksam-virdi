@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Akşam Virdi</title>
+<meta name="description" content="Günlük evrâd ve Hazret-i Pîr Nûreddîn el-Cerrâhî'nin akşam virdi.">
+<meta name="theme-color" content="#194341">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Akşam Virdi">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Literata:opsz,wght@7..72,400;7..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=Amiri:wght@400;700&family=Amiri+Quran&display=swap">
+<style>
+/* Düzen: tek sütun okuma şeridi; üstte yapışkan ilerleme çubuğu; her bölüm bir kart, sağında tesbih gibi sayan düğme. Renkler vird kitapçığının sarı kâğıdı, zeytin yeşili çerçevesi ve lacivert tezhibinden. */
+/* Kitapçığın görünümüne bilerek bağlı tek tema: limon sarısı kâğıt, zeytin yeşili çift çerçeve, kırmızı "defa" notları, pembe-mavi çiçekler */
+:root{
+  --paper:#FFF3CC; --sheet:#FFFAE8; --ink:#13201F; --muted:#56605A;
+  --olive:#194341; --gold:#D29B12; --lapis:#194341; --red:#B33F2C; --pink:#D7689A; --blue:#FFCD28;
+  --rule:#E8D38A; --done:#F7EBC2;
+  --cloth:#194341; --cloth-ink:#FFE7A0;
+  --illum:#1F2A12; --gilt:#E3C15C; --harakat:#E98A72;
+  --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-body:"Literata", Georgia, "Times New Roman", serif;
+  --f-ui:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-ar:"Amiri Quran", "Amiri", "Scheherazade New", "Traditional Arabic", serif;
+  --f-hat:"Amiri Quran", "Amiri", serif;
+  --fs:19px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);line-height:1.6;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule)}
+.bar-in{max-width:680px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:12px}
+.bar-in{flex-direction:column;align-items:stretch;gap:8px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:3px}
+.tab{font-family:var(--f-ui);font-size:14.5px;font-weight:600;padding:8px 6px;border:0;border-radius:7px;background:transparent;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--olive);color:var(--sheet)}
+.tab:focus-visible{outline:2px solid var(--lapis);outline-offset:2px}
+.prog{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.prog-top{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-ui);font-size:13px;color:var(--muted)}
+.prog-top b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.track{height:5px;border-radius:3px;background:var(--rule);overflow:hidden}
+.fill{height:100%;width:0;background:var(--olive);transition:width .3s ease}
+.sizes{display:flex;gap:4px}
+.sizes button{font-family:var(--f-ui);font-weight:600;width:38px;height:34px;border-radius:8px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.sizes button:nth-child(2){font-size:17px}
+
+.wrap{max-width:680px;margin:0 auto;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+
+.head{text-align:center;display:flex;flex-direction:column;gap:6px;padding-block:8px}
+.head h1{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,8vw,42px);line-height:1.1;margin:0;color:var(--olive);text-wrap:balance}
+.head p{margin:0;font-family:var(--f-display);font-style:italic;font-size:19px;color:var(--muted);text-wrap:balance}
+.orn{display:flex;align-items:center;gap:10px;justify-content:center;color:var(--gold);margin-top:4px}
+.orn::before,.orn::after{content:"";height:1px;width:64px;background:var(--rule)}
+.orn span{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gold)}
+
+.vakit{font-family:var(--f-ui);font-size:14.5px;line-height:1.5;background:var(--sheet);border:4px double var(--olive);border-radius:4px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px}
+.vakit dt{color:var(--red);font-weight:600}
+.vakit dd{margin:0;font-weight:500}
+
+#sekme{scroll-margin-top:0}
+.panel{display:flex;flex-direction:column;gap:28px}
+.sec{display:flex;flex-direction:column;gap:20px}
+.sec h2{font-family:var(--f-display);font-weight:600;font-size:23px;line-height:1.15;color:#FFE29A;margin:6px auto 0;text-align:center;text-wrap:balance;width:min(100%,460px);padding:16px 44px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20300%2060%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M22%201H278L299%2030L278%2059H22L1%2030Z%22%20fill%3D%22%23194341%22/%3E%3Cpath%20d%3D%22M25%205H275L293%2030L275%2055H25L7%2030Z%22%20fill%3D%22none%22%20stroke%3D%22%23FFCD28%22%20stroke-width%3D%221.6%22%20vector-effect%3D%22non-scaling-stroke%22/%3E%3Cpath%20d%3D%22M28%208.5H272L288%2030L272%2051.5H28L12%2030Z%22%20fill%3D%22none%22%20stroke%3D%22%23FFCD28%22%20stroke-width%3D%22.7%22%20vector-effect%3D%22non-scaling-stroke%22/%3E%3C/svg%3E") center/100% 100% no-repeat;text-shadow:0 1px 0 rgba(0,0,0,.35)}
+
+.item{position:relative;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20transform%3D%22rotate%280%2012%2012%29%22%20fill%3D%22none%22%20stroke%3D%22%23D29B12%22%20stroke-width%3D%221.1%22%3E%3Cpath%20d%3D%22M2%2014C2%207%207%202%2014%202%22/%3E%3Cpath%20d%3D%22M2%209C2%205%205%202%209%202%22/%3E%3Ccircle%20cx%3D%224.5%22%20cy%3D%224.5%22%20r%3D%221.6%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3Cpath%20d%3D%22M8%208c3%200%205%201.5%206%204c-2.5-1-4-.5-6-4z%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3C/g%3E%3C/svg%3E") left 5px top 5px/22px 22px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20transform%3D%22rotate%2890%2012%2012%29%22%20fill%3D%22none%22%20stroke%3D%22%23D29B12%22%20stroke-width%3D%221.1%22%3E%3Cpath%20d%3D%22M2%2014C2%207%207%202%2014%202%22/%3E%3Cpath%20d%3D%22M2%209C2%205%205%202%209%202%22/%3E%3Ccircle%20cx%3D%224.5%22%20cy%3D%224.5%22%20r%3D%221.6%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3Cpath%20d%3D%22M8%208c3%200%205%201.5%206%204c-2.5-1-4-.5-6-4z%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3C/g%3E%3C/svg%3E") right 5px top 5px/22px 22px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20transform%3D%22rotate%28270%2012%2012%29%22%20fill%3D%22none%22%20stroke%3D%22%23D29B12%22%20stroke-width%3D%221.1%22%3E%3Cpath%20d%3D%22M2%2014C2%207%207%202%2014%202%22/%3E%3Cpath%20d%3D%22M2%209C2%205%205%202%209%202%22/%3E%3Ccircle%20cx%3D%224.5%22%20cy%3D%224.5%22%20r%3D%221.6%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3Cpath%20d%3D%22M8%208c3%200%205%201.5%206%204c-2.5-1-4-.5-6-4z%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3C/g%3E%3C/svg%3E") left 5px bottom 5px/22px 22px no-repeat,url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cg%20transform%3D%22rotate%28180%2012%2012%29%22%20fill%3D%22none%22%20stroke%3D%22%23D29B12%22%20stroke-width%3D%221.1%22%3E%3Cpath%20d%3D%22M2%2014C2%207%207%202%2014%202%22/%3E%3Cpath%20d%3D%22M2%209C2%205%205%202%209%202%22/%3E%3Ccircle%20cx%3D%224.5%22%20cy%3D%224.5%22%20r%3D%221.6%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3Cpath%20d%3D%22M8%208c3%200%205%201.5%206%204c-2.5-1-4-.5-6-4z%22%20fill%3D%22%23D29B12%22%20stroke%3D%22none%22/%3E%3C/g%3E%3C/svg%3E") right 5px bottom 5px/22px 22px no-repeat;background-color:var(--sheet);border:4px double var(--olive);border-radius:4px;padding:16px;display:grid;grid-template-columns:1fr auto;grid-template-areas:"txt ctl" "note note" "ar ar";gap:14px;align-items:center;transition:background .25s,opacity .25s,border-color .25s;scroll-margin-top:140px}
+.item.current{border-color:var(--lapis);box-shadow:0 0 0 2px var(--blue)}
+.item.done{background-color:var(--done);opacity:.6}
+.txt{grid-area:txt;min-width:0;font-size:var(--fs);line-height:1.65;white-space:pre-line;overflow-wrap:anywhere}
+.no{position:absolute;top:-11px;left:12px;font-family:var(--f-ui);font-size:11.5px;font-weight:600;background:var(--olive);color:var(--sheet);border-radius:999px;padding:1px 8px;font-variant-numeric:tabular-nums}
+.note{grid-area:note;font-family:var(--f-ui);font-size:13.5px;font-weight:500;color:var(--red);margin-top:-6px}
+.ar{grid-area:ar;min-width:0;font-family:var(--f-ar);font-size:calc(var(--fs) * 1.55);line-height:2.5;text-align:right;white-space:pre-line;color:var(--ink);border-top:1px solid var(--gold);padding-top:8px}
+.ay{display:inline-block;width:.5em;height:.5em;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFF2B8,var(--gilt) 55%,#8A6A18);box-shadow:0 0 0 1px var(--olive);margin:0 .3em;vertical-align:middle}
+.ctl{grid-area:ctl;display:flex;flex-direction:column;align-items:center;gap:6px}
+.tap{width:76px;height:76px;border-radius:50%;border:3px double var(--olive);background:transparent;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--f-ui);touch-action:manipulation;transition:transform .08s}
+.tap:active{transform:scale(.94)}
+.tap .num{font-size:24px;font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.tap .of{font-size:12px;color:var(--red);font-weight:600;font-variant-numeric:tabular-nums}
+.tap .once{font-size:14px;font-weight:600}
+.item.done .tap{background:var(--olive);border-color:var(--olive);color:var(--sheet)}
+.item.done .tap .of{color:var(--sheet)}
+.undo{font-family:var(--f-ui);font-size:12.5px;border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;padding:2px 4px}
+.tap:focus-visible,.undo:focus-visible,.sizes button:focus-visible,.foot button:focus-visible{outline:2px solid var(--lapis);outline-offset:3px}
+
+.foot{display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--f-ui);font-size:14px;color:var(--muted);text-align:center}
+.foot button{font-family:var(--f-ui);font-size:15px;font-weight:500;padding:10px 18px;border-radius:999px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.foot .yes{background:var(--olive);border-color:var(--olive);color:var(--sheet)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.bitti{font-family:var(--f-display);font-size:24px;color:var(--olive)}
+
+/* Kapak: dergi kapağı gibi; fotoğraf her temada aynı kaldığı için renkleri sabit */
+:root{--cover-ink:#1E1C13;--cover-light:#F7F1DC;--cover-gold:#FFCD28}
+.cover{margin:0 auto;position:relative;aspect-ratio:567/705;max-width:min(680px,100%);overflow:hidden;background:#13302E;color:var(--cover-light)}
+.cover::before{content:"";position:absolute;inset:-24px;background:url("kapak.jpg") center/cover no-repeat;filter:blur(7px) grayscale(.35) brightness(.78)}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(19,48,46,.55) 0%,rgba(19,48,46,.35) 45%,rgba(12,30,29,.88) 100%);pointer-events:none}
+.cover-in{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:space-between;padding-block:18px 22px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.issue{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-ui);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid rgba(255,205,40,.6);padding-bottom:6px;color:var(--cover-gold)}
+.tac{display:block;width:86%;max-width:520px;margin:0 auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+.cover-mast{font-family:var(--f-display);font-weight:600;font-size:clamp(30px,8.5vw,46px);line-height:1;margin:0;color:var(--cover-light);text-align:center}
+.cover-mast i{display:block;font-weight:500;font-size:.5em;color:var(--cover-gold);margin-top:6px;letter-spacing:.02em}
+.mast{font-family:var(--f-display);font-weight:600;font-size:clamp(52px,15vw,96px);line-height:.88;letter-spacing:-.01em;margin:10px 0 0;color:var(--cover-ink)}
+.hat{font-family:var(--f-hat);font-weight:400;font-size:clamp(28px,8vw,46px);line-height:1.9;margin:6px 0 0;color:var(--cover-ink);text-align:right}
+.mast i{display:block;font-weight:500;font-size:.42em;letter-spacing:.01em;margin-top:6px}
+.cover-foot{color:var(--cover-light);display:flex;flex-direction:column;gap:14px}
+.cover-foot .pir{font-family:var(--f-display);font-size:clamp(22px,5.6vw,30px);line-height:1.15;font-weight:600;text-wrap:balance;margin:0}
+.cover-foot .pir small{display:block;font-style:italic;font-weight:500;font-size:.68em;color:var(--cover-gold);margin-top:2px}
+.cover-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--f-ui);font-size:12.5px;letter-spacing:.04em}
+.cover-row a{color:var(--cover-ink);background:var(--cover-gold);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:999px}
+.cover-row a:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
+
+
+/* Arapça önde */
+.arfirst .item{grid-template-areas:"ar ar" "txt ctl" "note note"}
+.arfirst .ar{border-top:0;border-bottom:1px solid var(--gold);padding:4px 0 10px;font-size:calc(var(--fs) * 1.7)}
+.arfirst .txt{font-size:calc(var(--fs) * .86);color:var(--muted)}
+/* tesbih tanesi sayaç ve mühür */
+.tap{position:relative;overflow:visible}
+.beads{position:absolute;left:50%;top:50%;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none}
+.ctl{padding:9px 0}
+.seal{width:30px;height:30px;display:block}
+.item.done .tap{background:var(--cloth);border-color:var(--cloth)}
+.tab[aria-selected="true"]{background:var(--cloth);color:var(--cloth-ink)}
+.fill{background:var(--cloth)}
+.no{background:var(--cloth)!important;color:var(--cloth-ink)!important}
+.sizes button.on{background:var(--cloth);color:var(--cloth-ink);border-color:var(--cloth)}
+#arbtn{font-family:var(--f-ar);font-size:19px;line-height:1}
+@media (max-width:420px){.sec h2{font-size:21px;padding:14px 38px}}
+@media (max-width:420px){.item{padding:14px;gap:10px}.tap{width:66px;height:66px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<section class="cover" aria-label="Kapak">
+  <div class="cover-in">
+    <div class="issue"><span>Günlük Evrâd</span><span>Akşam Virdi</span></div>
+    <img class="tac" src="tac.webp" alt="Yâ Hazret-i Pîr Seyyid Sultan Muhammed Nûreddîn el-Cerrâhî kaddesallâhu sırrahu'l-Fettâhî">
+    <div class="cover-foot">
+      <h1 class="cover-mast">Vird-i Şerîf<i>Sağîr-i Mesâiyye</i></h1>
+      <div class="cover-row">
+        <a href="#sekme">Okumaya başla ↓</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<header class="bar" id="sekme"><div class="bar-in">
+  <div class="tabs" role="tablist" aria-label="Bölümler">
+    <button class="tab" role="tab" id="tab-gunluk" type="button" data-g="gunluk">Günlük Evrâd</button>
+    <button class="tab" role="tab" id="tab-vird" type="button" data-g="vird">Akşam Virdi</button>
+  </div>
+  <div class="bar-row">
+    <div class="prog">
+      <div class="prog-top"><span id="ptitle">Akşam Virdi</span><span><b id="pn">0</b> / <b id="pt">0</b> bölüm</span></div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <div class="sizes" aria-label="Yazı boyutu">
+      <button id="arbtn" type="button" aria-pressed="false" aria-label="Arapçayı öne al">ع</button>
+      <button id="smaller" type="button" aria-label="Yazıyı küçült">A−</button>
+      <button id="bigger" type="button" aria-label="Yazıyı büyüt">A+</button>
+    </div>
+  </div>
+</div></header>
+
+<main class="wrap">
+  <div class="panel" id="p-gunluk" role="tabpanel" aria-labelledby="tab-gunluk">
+    <dl class="vakit">
+      <dt>Sabah namazından sonra</dt><dd>33 İhlâs-ı Şerîf, Yâsîn-i Şerîf</dd>
+      <dt>İkindi namazından sonra</dt><dd>33 Salavât-ı Şerîfe</dd>
+      <dt>Akşam namazından sonra</dt><dd>33 Estağfirullah, Mülk Sûresi</dd>
+    </dl>
+    <div class="list" id="list-gunluk"></div>
+  </div>
+  <div class="panel" id="p-vird" role="tabpanel" aria-labelledby="tab-vird">
+    <dl class="vakit">
+      <dt>Yazın</dt><dd>akşam namazından sonra okunur</dd>
+      <dt>Kışın</dt><dd>akşam namazından önce okunur</dd>
+    </dl>
+    <div class="list" id="list-vird"></div>
+  </div>
+
+  <div class="foot" id="foot">
+    <div class="bitti" id="bitti" hidden>Allah kabul etsin</div>
+    <button id="reset" type="button">Bu bölümü baştan başla</button>
+    <div class="confirm" id="confirm" hidden>
+      <span>Bu bölümün sayaçları sıfırlansın mı?</span>
+      <button class="yes" id="resetYes" type="button">Evet, sıfırla</button>
+      <button id="resetNo" type="button">Vazgeç</button>
+    </div>
+    <div>Sayaçlar her gün kendiliğinden sıfırlanır.</div>
+  </div>
+</main>
+
+<script>
+const FATIHA = "Bismillâh-ir-Rahmân-ir-Rahîm\nEl-hamdü lillahi Rabbil-âlemîn Er-Rahman-ir-Rahîm mâliki yevm-id-dîn iyyâke nâ'büdü ve iyyâke nesta'în ihdinas-sırât-el müstakîm sıratellezîne en'amte aleyhim ğayr-il mağdûbi aleyhim ve led-dâllîn";
+
+const SECTIONS = [
+ { h: "Vird-i Şerîf", items: [
+  { t: "E'ûzü billahi min-eş şeytân-ir-racîm", n: 10 },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm", n: 9 },
+  { t: "Estağfirullah", n: 100 },
+  { t: "Estağfirullah Estağfirullah Estağfirullah Estağfirullah el-azîm'ellezî lâ ilâhe illâ huvel Hayyul-Kayyum ve etûbü ileyhi ve es'elüh-üt tevbete vel-mağfirete vel-hidâyete innehû hüvet-tevvâb-ür-Rahîm.", n: 1 },
+  { t: "Vâ'fü annâ yâ Kerîm", n: 3 },
+  { t: "V'ağfir lena bi-fadlike yâ Rahmânü yâ Rahîm", n: 3 },
+  { t: "Yâ Melîk u yâ Kuddüs ü yâ Hafiz ü ya Allah", n: 3 },
+  { t: "Allahümme salli alâ seyyidina Muhammedin ve alâ âl-i Muhammedin ve sahbihî ve sellim", n: 3 },
+  { t: "Allahümme salli alâ seyyidina Muhammedin m'ahtelef-el-melevân ve te'âkab-el-asarân ve kerrer-el-cedîdân v'estakbel-el-ferkadân ve belliğ rûhahü ve ervâhe ehl-i beytihî minnet tahiyyete ves-selâm ü ve bârik ve sellim aleyhi kesîren kesîren kesîrâ.", n: 1 },
+  { t: "Ve sallallahu alâ seyyidinâ Muhammedin ve alâ cemî'il-Enbiyâ'i vel-mürselîne vel-Evliyâ'i ves-sâlihîne ve alâ melâ'iketike vel-mukarrebîne ve alâ ehl-i tâ'atike ecma'îne min ehl-is-semâvati ve ehl-il aradîne ridvanullahi teâlâ alâ âl-i Resûlillâhi ve eshabihî ecma'în.\nBi-rahmetike yâ erham-er-râhimîne âmin vel-hamdü lillâhi Rabbil-âlemîn.", n: 1 },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nKul hüvallahü ahad Allah-üs-samed lem yelid ve lem yûled ve lem yekün lehu küfüven ahad", n: 3, note: "İhlâs-ı Şerîf" },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nKul e'ûzü bi-Rabbil felâk min şerri mâ halâk ve min şerri ğasikin izâ vekab ve min şerrin-neffâsâti fil-ukad ve min şerri hâsidin izâ hased.", n: 1, note: "Felak Sûresi" },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nKul e'ûzü bi-Rabbin nâsi melik-in nâsi ilâh-in-nâsi min şerril-vesvâs-il hannâs ellezî yüvesvisü fî sudur-in nâsi min-el cinneti ven nâs.", n: 1, note: "Nâs Sûresi" },
+  { t: FATIHA, n: 3, note: "Fâtiha-i Şerîfe" },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nElif-Lâm-Mim. Zâlik-el-kitâbü lâ raybe fîh hüden lil-müttekîne ellezîne yü'minûne bil-ğaybi ve yukîmûnes-salâte ve mimmâ razaknâhüm yünfikûn vellezîne yü'minûne bimâ ünzile ileyke ve mâ ünzile min kablike ve bil-âhireti hüm yûkinûn ulâ'ike alâ hüden min Rabbihim ve ulâ'ike hüm-ül-müflihûn.", n: 1, note: "Bakara Sûresi'nin başı" },
+  { t: "Allâhü lâ ilâhe illâ hüvel-Hayyül Kayyûmü lâ te'huzühû sînetün ve lâ nevm lehû mâ fis-semâvâti ve mâ fil-ardı men zellezî yeşfe'u ındehû illâ bi-iznihi yâ'lemu mâ beyne eydîhim ve mâ halfehüm ve la yuhîtûne bi-şey'in min ilmihî illâ bimâ şâ'e vesi'a kürsiyyüh-üs-semâvâti vel-ard ve lâ yeûdühû hıfzuhümâ ve hüvel-aliyyül-azîm.", n: 3, note: "Âyete'l-Kürsî" },
+  { t: "Hâ-mim..Hâ-mim..Hâ-mim..Hâ-mim..\nHâ-mim..Hâ-mim..Hâ-mim..Hâ-mim..\nTenzîl-ül-kitâbi min'allâh-il-azîz-il-alîm. Ğâfir-iz-zenbi ve kâbil-it-tevbi şedîdil-ikâbi zit-tavli lâ ilâhe illâ hüve ileyh-il-masîr.", n: 1 },
+  { t: "Âmen-er-resûlü bimâ ünzile ileyhi min Rabbihî vel-mü'minûn küllün âmene billâhi ve melâ iketihî ve kütübihî ve rüsülihî lâ nüferriku beyne ahadin min rüsülihî ve kâlû semi'nâ ve ata'nâ gufrâneke Rabbenâ ve ileyk-el-masîr. Lâ yükellifullâhü nefsen illâ vüs'ahâ lehâ ma kesebet ve aleyhâ m'ektesebet Rabbenâ lâ tu'âhiznâ in nesiynâ ev ahtâ'nâ Rabbenâ ve lâ tahmil aleynâ isran kemâ hameltehû alellezîne min kablinâ Rabbenâ ve lâ tuhammilnâ mâ lâ tâkate lenâ bihi va'fü annâ v'ağfir lenâ v'erhamnâ ente Mevlânâ fansurnâ alel-kavm-il kâfirîn.", n: 1, note: "Âmene'r-Resûlü" },
+  { t: "Fe-sübhânallâhi hîne tümsûne ve hîne tusbihûne ve lehül-hamdü fis-semâvâti vel-arda ve aşiyyen ve hîne tuzhirûn. Yuhric-ül hayye min-el meyyiti ve yuhric-ül meyyite min-el hayyi ve yuhyil-arda bâ'de mevtihâ ve kezâlike tuhrecûn.", n: 1 },
+  { t: "Hasbiyallâhü lâ ilâhe illâ hüve aleyhi tevekkeltü ve hüve Rabbül-arş-il azîm", n: 7 },
+  { t: "Ve mâ ce'alehullâhü illâ büşrâ leküm ve li-tatma'inne kulûbüküm bihî ve men-nasrü illâ min indillâh-il-azîz-il hakîm.\nElif-Lâm-Mim..Elif-Lâm-Mim-Râ..\nKâf-Hâ-Yâ-Ayn-Sâd..Hâ-Mim-Ayn-Sin-Kaf...\nİkfinâ v'erhamnâ hüvallah-ür-Râfi-un Nâfi-ür Reşîd-ül Hayyül Kayyûm el-Lâtifü el-Kâdirü el-Kavîyyü el-Metînü el-Ganîyyü el-Muğniü el-Mu'izzü el-Aliyyü el-Bâsitü el-Vedûd el-Vedûd el-Vedûd", n: 1 },
+  { t: "Ağisnâ yâ Rabbi yâ kerimü v'erhamnâ yâ Rabbi yâ Rahîm", n: 3 },
+  { t: "Yâ Rahmân-ed-dünyâ ve Rahîm-el-âhireti fa'fü annâ v'ağfir lenâ v'erhamna ente Mevlânâ ve ente hayr-ür-râhimîn..\nBismillâh-iş-şâfi hüvallâh\nBismillâh-il-kâfi hüvallâh\nBismillâh-il-mu'âfî hüvallâh\nBismillâhillezî lâ yadurrü me'aismihî şey'ün fil-ardi va lâ fis-semâ'i ve hüves-semî'ul-alîm.\nE'ûzü bi-kelimâtillâh-it tâmmâti kül lihâ min şerri mâ halâka\nFallahü hayrün hâfizan ve hüve erham-ür-rahimîn.", n: 1 },
+  { t: "Sübhânallâhi ve bi-hamdihî", n: 3 },
+  { t: "Sübhânâllah vel-hamdü lillâhi ve lâ ilâhe illallâhu vallâhu ekber ve lâ havle ve lâ kuvvete illâ billâh-il aliyyil-azîm.", n: 3 },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm", n: 3, note: "Üç defa aza meshedilecek" },
+  { t: "Yâ Hannânü", n: 1, note: "Sağ taraf meshedilecek" },
+  { t: "Yâ Mennânü", n: 1, note: "Sol taraf meshedilecek" },
+  { t: "Yâ bedî'as-semâvâti vel-ardi yâ Hayyü yâ Kayyûm, Yâ zel-celâli vel-ikrâm Nes'elüke bi-izâm-il-lâhutiyyetihi en tenkule tibâ'anâ min tibâ'il-beşeriyyeti ve en terfa'a mühecenâ mea melâiketik-el-ulviyyeti\nYâ muhavvil-el-havli vel-ahvâli havvil hâlenâ ilâ ahsen-il hâl\nSübhanekallâhümme ve bi-hamdike eşhedü en lâ ilâhe illâ ente estağfirüke ve etûbü ileyk", n: 1 },
+  { t: "Allahümme salli alâ seyyidinâ Muhammedin ve alâ âl-i Muhammedin ve sahbihî ve sellim", n: 3 },
+  { t: "Allâhu ekber Allâhu ekber lâ ilâhe illallâhu vallâhu ekber\nAllâhu ekber ve lillâh-il hamd", n: 1 },
+  { t: "Es-salâtü ves-selâmü aleyke yâ Resûlallah\nEs-salâtü ves-selâmü aleyke yâ Habîballah\nEs-salâtü ves-selâmü aleyke yâ seyyid-el-evvelîne vel-âhirîn\nVe sallallâhu alâ seyyidinâ Muhammedin ve alâ cemi-il-enbiyâ'i vel-mürselîn vel-evliyâ'i ves-sâlihîne ve alâ melâ'iketike vel-mukarrebîne ve alâ ehl-i tâ'atike ecma'îne min ehl-is-semâvâti ve ehl-il-aradîn ve rıdvânullâhi teâlâ alâ âl-i Resûlillâhi ve ashâbihî ecma'în bi-rahmetike yâ erham-er-râhimîn. Âmin vel-hamdü lillâhi Rabbil-âlemîn.", n: 1 }
+ ]},
+ { h: "Salât-ı Münciyye", items: [
+  { t: "Allâhümme salli alâ seyyidinâ Muhammedin salâten tüncîna bihâ min cemî-ıl ehvâli vel-âfât ve takdî lenâ bihâ cemî-ıl hâcât ve tutahhirunâ bihâ min cemi-is-seyyi'ât ve terfe'unâ bihâ â'led-derecât ve tübelliğunâ bihâ aks-al-ğâyât min cemi-il-hayrâti fil-hayâti ve bâ'd-el-memât", n: 1 }
+ ]},
+ { h: "Duâ-i Evrâd-ı Şerîf", items: [
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nAllahümme salli alâ Muhammedin ve alâ âl-i Muhammedin kemâ salleyte alâ İbrahime ve alâ âl-i İbrahime inneke Hamîdün Mecîd ve bârik alâ Muhammedin ve alâ âl-i Muhammedin kemâ bârekte alâ İbrahime ve alâ âl-i İbrahime inneke Hamîdün Mecîd.", n: 1 },
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nAllahümme innî es'elüke bi-fadli Bismillâh-ir-Rahmân-ir-Rahîm\nVe es'elüke bi-cemâli Bismillâh-ir-Rahmân-ir-Rahîm\nVe es'elüke bi-celâli Bismillâh-ir-Rahmân-ir-Rahîm\nVe es'elüke bi-bekâ'i Bismillâh-ir-Rahmân-ir-Rahîm\nVe es'elüke bi-heybeti Bismillâh-ir-Rahmân-ir-Rahîm\nVe es'elüke bi-hürmeti Bismillâh-ir-Rahmân-ir-Rahîm\nVe bi-ceberûti ve melekûti Bismillâh-ir-Rahmân-ir-Rahîm\nVe bi-izzeti ve kuvveti ve kudreti Bismillâh-ir-Rahmân-ir-Rahîm", n: 1 },
+  { t: "Irfâ'kadrî ve yessir emrî vecbür kesrî v'ağni fakrî ve etil ömrî bi-fadlike ve keremike ve ihsânike yâ men hû Kâf-Hâ-Yâ-Ayn-Sâd Hâ-mim-ayn-sin-Kaf Elif-lâm-mim Elif-lâm-mim-râ sırrullâh-il azîm-ül-â'zam Allâhu lâ ilâhe illâ hüvel-Hayyül Kayyûm-ül Aliyyül-Ekrem ve es'elüke bi-celâl-il heybeti ve bı-ızzil-ızzeti ve es'elüke bi-kibriyâ-il azameti ve bi-ceberût-il kudreti en tec'alenî minellezîne lâ havfün aleyhim ve lâ hüm yahzenûn.", n: 1 }
+ ]},
+ { h: "Fâtihatü'l-Fukarâ", items: [
+  { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nAllahümmec'alnî minellezîne en'amte aleyhim ve mellektehüm sırra esmâ'ike ve ce'altehüm min evliyâ'ike ve metta'tehüm bi-kitâbike\nAllahümme ekrimnî bi-sırrıl-Fâtihati ve veffiknî li-sırrıhâ ve azhirlî ruhâniyyetihâ inneke alâ külli şey'in kadîr\nAllahümme neccinî min-el-ğammi vel-hemmi yâ müncî el-mü'minîn ve ferric mâ ene fîhi yâ müferrice küreb-il-mekrûbîn ve en tüsahhir lî abdek-el-uhaydire hâdim-el-Fâtiha'ti inneke alâ külli şey'in kadîr.", n: 1 },
+  { t: FATIHA, n: 10, note: "On defa Fâtiha-i Şerîfe okunacaktır" }
+ ]}
+];
+
+const B = "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ";
+const SALLI = "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّدٍ وَصَحْبِهِ وَسَلِّمْ";
+const VE_SALLA = "وَصَلَّى اللّٰهُ عَلٰى سَيِّدِنَا مُحَمَّدٍ وَعَلٰى جَمِيعِ الْأَنْبِيَاءِ وَالْمُرْسَلِينَ * وَالْأَوْلِيَاءِ وَالصَّالِحِينَ * وَعَلٰى مَلَائِكَتِكَ وَالْمُقَرَّبِينَ * وَعَلٰى أَهْلِ طَاعَتِكَ أَجْمَعِينَ * مِنْ أَهْلِ السَّمٰوَاتِ وَأَهْلِ الْأَرَضِينَ * وَرِضْوَانُ اللّٰهِ تَعَالٰى عَلٰى آلِ رَسُولِ اللّٰهِ وَأَصْحَابِهِ أَجْمَعِينَ * بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ * آمِينَ وَالْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ";
+const FATIHA_AR = B + "\nاَلْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ * اَلرَّحْمٰنِ الرَّحِيمِ * مَالِكِ يَوْمِ الدِّينِ * إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ * اِهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ * صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ";
+const AR = [
+ "أَعُوذُ بِاللّٰهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+ B,
+ "أَسْتَغْفِرُ اللّٰهَ",
+ "أَسْتَغْفِرُ اللّٰهَ أَسْتَغْفِرُ اللّٰهَ أَسْتَغْفِرُ اللّٰهَ * أَسْتَغْفِرُ اللّٰهَ الْعَظِيمَ الَّذِي لَا إِلٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ * وَأَتُوبُ إِلَيْهِ وَأَسْأَلُهُ التَّوْبَةَ وَالْمَغْفِرَةَ وَالْهِدَايَةَ إِنَّهُ هُوَ التَّوَّابُ الرَّحِيمُ",
+ "وَاعْفُ عَنَّا يَا كَرِيمُ",
+ "وَاغْفِرْ لَنَا بِفَضْلِكَ يَا رَحْمٰنُ يَا رَحِيمُ",
+ "يَا مَلِكُ يَا قُدُّوسُ يَا حَفِيظُ يَا اَللّٰهُ",
+ SALLI,
+ "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ مَا اخْتَلَفَ الْمَلَوَانِ * وَتَعَاقَبَ الْعَصْرَانِ * وَكَرَّرَ الْجَدِيدَانِ * وَاسْتَقْبَلَ الْفَرْقَدَانِ * وَبَلِّغْ رُوحَهُ وَأَرْوَاحَ أَهْلِ بَيْتِهِ مِنَّا التَّحِيَّةَ وَالسَّلَامَ وَبَارِكْ وَسَلِّمْ عَلَيْهِ كَثِيرًا كَثِيرًا كَثِيرًا",
+ VE_SALLA,
+ B + "\nقُلْ هُوَ اللّٰهُ أَحَدٌ * اَللّٰهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
+ B + "\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ * مِنْ شَرِّ مَا خَلَقَ * وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ * وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ * وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+ B + "\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلٰهِ النَّاسِ * مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * اَلَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ",
+ FATIHA_AR,
+ B + "\nالٓمٓ * ذٰلِكَ الْكِتَابُ لَا رَيْبَ فِيهِ هُدًى لِلْمُتَّقِينَ * اَلَّذِينَ يُؤْمِنُونَ بِالْغَيْبِ وَيُقِيمُونَ الصَّلَاةَ وَمِمَّا رَزَقْنَاهُمْ يُنْفِقُونَ * وَالَّذِينَ يُؤْمِنُونَ بِمَا أُنْزِلَ إِلَيْكَ وَمَا أُنْزِلَ مِنْ قَبْلِكَ وَبِالْآخِرَةِ هُمْ يُوقِنُونَ * أُولٰئِكَ عَلٰى هُدًى مِنْ رَبِّهِمْ وَأُولٰئِكَ هُمُ الْمُفْلِحُونَ",
+ "اَللّٰهُ لَا إِلٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ * لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَهُ مَا فِي السَّمٰوَاتِ وَمَا فِي الْأَرْضِ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمٰوَاتِ وَالْأَرْضَ * وَلَا يَؤُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+ "حٰمٓ حٰمٓ حٰمٓ حٰمٓ حٰمٓ حٰمٓ حٰمٓ حٰمٓ * تَنْزِيلُ الْكِتَابِ مِنَ اللّٰهِ الْعَزِيزِ الْعَلِيمِ * غَافِرِ الذَّنْبِ وَقَابِلِ التَّوْبِ شَدِيدِ الْعِقَابِ * ذِي الطَّوْلِ لَا إِلٰهَ إِلَّا هُوَ إِلَيْهِ الْمَصِيرُ",
+ "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ وَالْمُؤْمِنُونَ * كُلٌّ آمَنَ بِاللّٰهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِنْ رُسُلِهِ وَقَالُوا سَمِعْنَا وَأَطَعْنَا غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ * لَا يُكَلِّفُ اللّٰهُ نَفْسًا إِلَّا وُسْعَهَا لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ رَبَّنَا لَا تُؤَاخِذْنَا إِنْ نَسِينَا أَوْ أَخْطَأْنَا رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَا إِصْرًا كَمَا حَمَلْتَهُ عَلَى الَّذِينَ مِنْ قَبْلِنَا رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِهِ وَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا أَنْتَ مَوْلَانَا فَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
+ "فَسُبْحَانَ اللّٰهِ حِينَ تُمْسُونَ وَحِينَ تُصْبِحُونَ * وَلَهُ الْحَمْدُ فِي السَّمٰوَاتِ وَالْأَرْضِ وَعَشِيًّا وَحِينَ تُظْهِرُونَ * يُخْرِجُ الْحَيَّ مِنَ الْمَيِّتِ وَيُخْرِجُ الْمَيِّتَ مِنَ الْحَيِّ وَيُحْيِ الْأَرْضَ بَعْدَ مَوْتِهَا وَكَذٰلِكَ تُخْرَجُونَ",
+ "حَسْبِيَ اللّٰهُ لَا إِلٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+ "وَمَا جَعَلَهُ اللّٰهُ إِلَّا بُشْرٰى لَكُمْ وَلِتَطْمَئِنَّ قُلُوبُكُمْ بِهِ وَمَا النَّصْرُ إِلَّا مِنْ عِنْدِ اللّٰهِ الْعَزِيزِ الْحَكِيمِ * الٓمٓ * الٓمٓرٰ * كٓهٰيٰعٓصٓ * حٰمٓ عٓسٓقٓ * اِكْفِنَا وَارْحَمْنَا هُوَ اللّٰهُ الرَّافِعُ النَّافِعُ الرَّشِيدُ الْحَيُّ الْقَيُّومُ * اَللَّطِيفُ الْقَادِرُ * الْقَوِيُّ * الْمَتِينُ * الْغَنِيُّ * الْمُغْنِي * الْمُعِزُّ * الْعَلِيُّ * الْبَاسِطُ * الْوَدُودُ الْوَدُودُ الْوَدُودُ",
+ "أَغِثْنَا يَا رَبِّ يَا كَرِيمُ * وَارْحَمْنَا يَا رَبِّ يَا رَحِيمُ",
+ "يَا رَحْمٰنَ الدُّنْيَا وَرَحِيمَ الْآخِرَةِ * فَاعْفُ عَنَّا وَاغْفِرْ لَنَا وَارْحَمْنَا أَنْتَ مَوْلَانَا وَأَنْتَ خَيْرُ الرَّاحِمِينَ * بِسْمِ اللّٰهِ الشَّافِي هُوَ اللّٰهُ * بِسْمِ اللّٰهِ الْكَافِي هُوَ اللّٰهُ * بِسْمِ اللّٰهِ الْمُعَافِي هُوَ اللّٰهُ * بِسْمِ اللّٰهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ * أَعُوذُ بِكَلِمَاتِ اللّٰهِ التَّامَّاتِ كُلِّهَا مِنْ شَرِّ مَا خَلَقَ * فَاللّٰهُ خَيْرٌ حَافِظًا وَهُوَ أَرْحَمُ الرَّاحِمِينَ",
+ "سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ",
+ "سُبْحَانَ اللّٰهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ * وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَلِيِّ الْعَظِيمِ",
+ B,
+ "يَا حَنَّانُ",
+ "يَا مَنَّانُ",
+ "يَا بَدِيعَ السَّمٰوَاتِ وَالْأَرْضِ * يَا حَيُّ يَا قَيُّومُ * يَا ذَا الْجَلَالِ وَالْإِكْرَامِ * نَسْأَلُكَ بِعِظَمِ اللَّاهُوتِيَّةِ أَنْ تَنْقُلَ طِبَاعَنَا مِنْ طِبَاعِ الْبَشَرِيَّةِ * وَأَنْ تَرْفَعَ مُهَجَنَا مَعَ مَلَائِكَتِكَ الْعُلْوِيَّةِ * يَا مُحَوِّلَ الْحَوْلِ وَالْأَحْوَالِ * حَوِّلْ حَالَنَا إِلٰى أَحْسَنِ الْحَالِ * سُبْحَانَكَ اللّٰهُمَّ وَبِحَمْدِكَ أَشْهَدُ أَنْ لَا إِلٰهَ إِلَّا أَنْتَ * أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ",
+ SALLI,
+ "اَللّٰهُ أَكْبَرُ اَللّٰهُ أَكْبَرُ * لَا إِلٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ * اَللّٰهُ أَكْبَرُ وَلِلّٰهِ الْحَمْدُ",
+ "اَلصَّلَاةُ وَالسَّلَامُ عَلَيْكَ يَا رَسُولَ اللّٰهِ * اَلصَّلَاةُ وَالسَّلَامُ عَلَيْكَ يَا حَبِيبَ اللّٰهِ * اَلصَّلَاةُ وَالسَّلَامُ عَلَيْكَ يَا سَيِّدَ الْأَوَّلِينَ وَالْآخِرِينَ * " + VE_SALLA,
+ "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ صَلَاةً تُنْجِينَا بِهَا مِنْ جَمِيعِ الْأَهْوَالِ وَالْآفَاتِ * وَتَقْضِي لَنَا بِهَا جَمِيعَ الْحَاجَاتِ * وَتُطَهِّرُنَا بِهَا مِنْ جَمِيعِ السَّيِّئَاتِ * وَتَرْفَعُنَا بِهَا أَعْلَى الدَّرَجَاتِ * وَتُبَلِّغُنَا بِهَا أَقْصَى الْغَايَاتِ * مِنْ جَمِيعِ الْخَيْرَاتِ فِي الْحَيَاةِ وَبَعْدَ الْمَمَاتِ",
+ B + "\nاَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلٰى إِبْرَاهِيمَ وَعَلٰى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ * وَبَارِكْ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلٰى إِبْرَاهِيمَ وَعَلٰى آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ",
+ B + " * اَللّٰهُمَّ إِنِّي أَسْأَلُكَ بِفَضْلِ " + B + " * وَأَسْأَلُكَ بِجَمَالِ " + B + " * وَأَسْأَلُكَ بِجَلَالِ " + B + " * وَأَسْأَلُكَ بِبَقَاءِ " + B + " * وَأَسْأَلُكَ بِهَيْبَةِ " + B + " * وَأَسْأَلُكَ بِحُرْمَةِ " + B + " * وَبِجَبَرُوتِ وَمَلَكُوتِ " + B + " * وَبِعِزَّةِ وَقُوَّةِ وَقُدْرَةِ " + B,
+ "اِرْفَعْ قَدْرِي * وَيَسِّرْ أَمْرِي * وَاجْبُرْ كَسْرِي * وَأَغْنِ فَقْرِي * وَأَطِلْ عُمْرِي بِفَضْلِكَ وَكَرَمِكَ وَإِحْسَانِكَ يَا مَنْ هُوَ * كٓهٰيٰعٓصٓ * حٰمٓ عٓسٓقٓ * الٓمٓ * الٓمٓرٰ * سِرُّ اللّٰهِ الْعَظِيمِ الْأَعْظَمِ * اَللّٰهُ لَا إِلٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ الْعَلِيُّ الْأَكْرَمُ * وَأَسْأَلُكَ بِجَلَالِ الْهَيْبَةِ وَبِعِزِّ الْعِزَّةِ * وَأَسْأَلُكَ بِكِبْرِيَاءِ الْعَظَمَةِ * وَبِجَبَرُوتِ الْقُدْرَةِ أَنْ تَجْعَلَنِي مِنَ الَّذِينَ لَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ",
+ B + "\nاَللّٰهُمَّ اجْعَلْنِي مِنَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ وَمَلَّكْتَهُمْ سِرَّ أَسْمَائِكَ وَجَعَلْتَهُمْ مِنْ أَوْلِيَائِكَ وَمَتَّعْتَهُمْ بِكِتَابِكَ * اَللّٰهُمَّ أَكْرِمْنِي بِسِرِّ الْفَاتِحَةِ * وَوَفِّقْنِي لِسِرِّهَا وَأَظْهِرْ لِي رُوحَانِيَّتَهَا إِنَّكَ عَلٰى كُلِّ شَيْءٍ قَدِيرٌ * اَللّٰهُمَّ نَجِّنِي مِنَ الْغَمِّ وَالْهَمِّ يَا مُنْجِيَ الْمُؤْمِنِينَ * وَفَرِّجْ مَا أَنَا فِيهِ يَا مُفَرِّجَ كَرْبِ الْمَكْرُوبِينَ * وَأَنْ تُسَخِّرَ لِي عَبْدَكَ الْأُخَيْضِرَ خَادِمَ الْفَاتِحَةِ * إِنَّكَ عَلٰى كُلِّ شَيْءٍ قَدِيرٌ",
+ FATIHA_AR
+];
+
+const YASIN = [
+["Yâsîn.","يسٓ"],
+["Vel-Kur'ânil-hakîm.","وَالْقُرْآنِ الْحَكِيمِ"],
+["İnneke le-minel-murselîn.","إِنَّكَ لَمِنَ الْمُرْسَلِينَ"],
+["Alâ sırâtın mustakîm.","عَلٰى صِرَاطٍ مُسْتَقِيمٍ"],
+["Tenzîlel-azîzir-rahîm.","تَنْزِيلَ الْعَزِيزِ الرَّحِيمِ"],
+["Li-tunzire kavmen mâ unzire âbâuhum fe-hum ğâfilûn.","لِتُنْذِرَ قَوْمًا مَا أُنْذِرَ آبَاؤُهُمْ فَهُمْ غَافِلُونَ"],
+["Le-kad hakkal-kavlu alâ ekserihim fe-hum lâ yu'minûn.","لَقَدْ حَقَّ الْقَوْلُ عَلٰى أَكْثَرِهِمْ فَهُمْ لَا يُؤْمِنُونَ"],
+["İnnâ cealnâ fî a'nâkıhim ağlâlen fe-hiye ilel-ezkâni fe-hum mukmehûn.","إِنَّا جَعَلْنَا فِي أَعْنَاقِهِمْ أَغْلَالًا فَهِيَ إِلَى الْأَذْقَانِ فَهُمْ مُقْمَحُونَ"],
+["Ve cealnâ min beyni eydîhim sedden ve min halfihim sedden fe-ağşeynâhum fe-hum lâ yubsırûn.","وَجَعَلْنَا مِنْ بَيْنِ أَيْدِيهِمْ سَدًّا وَمِنْ خَلْفِهِمْ سَدًّا فَأَغْشَيْنَاهُمْ فَهُمْ لَا يُبْصِرُونَ"],
+["Ve sevâun aleyhim e enzertehum em lem tunzirhum lâ yu'minûn.","وَسَوَاءٌ عَلَيْهِمْ أَأَنْذَرْتَهُمْ أَمْ لَمْ تُنْذِرْهُمْ لَا يُؤْمِنُونَ"],
+["İnnemâ tunziru menittebeaz-zikra ve haşiyer-rahmâne bil-ğayb, fe-beşşirhu bi-mağfiratin ve ecrin kerîm.","إِنَّمَا تُنْذِرُ مَنِ اتَّبَعَ الذِّكْرَ وَخَشِيَ الرَّحْمٰنَ بِالْغَيْبِ فَبَشِّرْهُ بِمَغْفِرَةٍ وَأَجْرٍ كَرِيمٍ"],
+["İnnâ nahnu nuhyil-mevtâ ve nektubu mâ keddemû ve âsârahum, ve kulle şey'in ahsaynâhu fî imâmin mubîn.","إِنَّا نَحْنُ نُحْيِي الْمَوْتٰى وَنَكْتُبُ مَا قَدَّمُوا وَآثَارَهُمْ وَكُلَّ شَيْءٍ أَحْصَيْنَاهُ فِي إِمَامٍ مُبِينٍ"],
+["Vadrib lehum meselen ashâbel-karyeh, iz câehel-murselûn.","وَاضْرِبْ لَهُمْ مَثَلًا أَصْحَابَ الْقَرْيَةِ إِذْ جَاءَهَا الْمُرْسَلُونَ"],
+["İz erselnâ ileyhimusneyni fe-kezzebûhumâ fe-azzeznâ bi-sâlisin fe-kâlû innâ ileykum murselûn.","إِذْ أَرْسَلْنَا إِلَيْهِمُ اثْنَيْنِ فَكَذَّبُوهُمَا فَعَزَّزْنَا بِثَالِثٍ فَقَالُوا إِنَّا إِلَيْكُمْ مُرْسَلُونَ"],
+["Kâlû mâ entum illâ beşerun mislunâ ve mâ enzeler-rahmânu min şey'in in entum illâ tekzibûn.","قَالُوا مَا أَنْتُمْ إِلَّا بَشَرٌ مِثْلُنَا وَمَا أَنْزَلَ الرَّحْمٰنُ مِنْ شَيْءٍ إِنْ أَنْتُمْ إِلَّا تَكْذِبُونَ"],
+["Kâlû rabbunâ ya'lemu innâ ileykum le-murselûn.","قَالُوا رَبُّنَا يَعْلَمُ إِنَّا إِلَيْكُمْ لَمُرْسَلُونَ"],
+["Ve mâ aleynâ illel-belâğul-mubîn.","وَمَا عَلَيْنَا إِلَّا الْبَلَاغُ الْمُبِينُ"],
+["Kâlû innâ tetayyernâ bikum, le-in lem tentehû le-nercumennekum ve le-yemessennekum minnâ azâbun elîm.","قَالُوا إِنَّا تَطَيَّرْنَا بِكُمْ لَئِنْ لَمْ تَنْتَهُوا لَنَرْجُمَنَّكُمْ وَلَيَمَسَّنَّكُمْ مِنَّا عَذَابٌ أَلِيمٌ"],
+["Kâlû tâirukum meakum, e in zukkirtum, bel entum kavmun musrifûn.","قَالُوا طَائِرُكُمْ مَعَكُمْ أَئِنْ ذُكِّرْتُمْ بَلْ أَنْتُمْ قَوْمٌ مُسْرِفُونَ"],
+["Ve câe min aksal-medîneti raculun yes'â kâle yâ kavmittebiul-murselîn.","وَجَاءَ مِنْ أَقْصَى الْمَدِينَةِ رَجُلٌ يَسْعٰى قَالَ يَا قَوْمِ اتَّبِعُوا الْمُرْسَلِينَ"],
+["İttebiû men lâ yes'elukum ecran ve hum muhtedûn.","اِتَّبِعُوا مَنْ لَا يَسْأَلُكُمْ أَجْرًا وَهُمْ مُهْتَدُونَ"],
+["Ve mâ liye lâ a'budullezî fetaranî ve ileyhi turceûn.","وَمَا لِيَ لَا أَعْبُدُ الَّذِي فَطَرَنِي وَإِلَيْهِ تُرْجَعُونَ"],
+["E ettehızu min dûnihî âliheten in yuridnir-rahmânu bi-durrin lâ tuğni annî şefâatuhum şey'en ve lâ yunkızûn.","أَأَتَّخِذُ مِنْ دُونِهِ آلِهَةً إِنْ يُرِدْنِ الرَّحْمٰنُ بِضُرٍّ لَا تُغْنِ عَنِّي شَفَاعَتُهُمْ شَيْئًا وَلَا يُنْقِذُونِ"],
+["İnnî izen le-fî dalâlin mubîn.","إِنِّي إِذًا لَفِي ضَلَالٍ مُبِينٍ"],
+["İnnî âmentu bi-rabbikum fesmeûn.","إِنِّي آمَنْتُ بِرَبِّكُمْ فَاسْمَعُونِ"],
+["Kîledhulil-cenneh, kâle yâ leyte kavmî ya'lemûn.","قِيلَ ادْخُلِ الْجَنَّةَ قَالَ يَا لَيْتَ قَوْمِي يَعْلَمُونَ"],
+["Bimâ ğafera lî rabbî ve cealenî minel-mukremîn.","بِمَا غَفَرَ لِي رَبِّي وَجَعَلَنِي مِنَ الْمُكْرَمِينَ"],
+["Ve mâ enzelnâ alâ kavmihî min ba'dihî min cundin mines-semâi ve mâ kunnâ munzilîn.","وَمَا أَنْزَلْنَا عَلٰى قَوْمِهِ مِنْ بَعْدِهِ مِنْ جُنْدٍ مِنَ السَّمَاءِ وَمَا كُنَّا مُنْزِلِينَ"],
+["İn kânet illâ sayhaten vâhideten fe-izâ hum hâmidûn.","إِنْ كَانَتْ إِلَّا صَيْحَةً وَاحِدَةً فَإِذَا هُمْ خَامِدُونَ"],
+["Yâ hasreten alel-ıbâd, mâ ye'tîhim min resûlin illâ kânû bihî yestehziûn.","يَا حَسْرَةً عَلَى الْعِبَادِ مَا يَأْتِيهِمْ مِنْ رَسُولٍ إِلَّا كَانُوا بِهِ يَسْتَهْزِئُونَ"],
+["E lem yerev kem ehleknâ kablehum minel-kurûni ennehum ileyhim lâ yerciûn.","أَلَمْ يَرَوْا كَمْ أَهْلَكْنَا قَبْلَهُمْ مِنَ الْقُرُونِ أَنَّهُمْ إِلَيْهِمْ لَا يَرْجِعُونَ"],
+["Ve in kullun lemmâ cemîun ledeynâ muhdarûn.","وَإِنْ كُلٌّ لَمَّا جَمِيعٌ لَدَيْنَا مُحْضَرُونَ"],
+["Ve âyetun lehumul-ardul-meyteh, ahyeynâhâ ve ahracnâ minhâ habben fe-minhu ye'kulûn.","وَآيَةٌ لَهُمُ الْأَرْضُ الْمَيْتَةُ أَحْيَيْنَاهَا وَأَخْرَجْنَا مِنْهَا حَبًّا فَمِنْهُ يَأْكُلُونَ"],
+["Ve cealnâ fîhâ cennâtin min nahîlin ve a'nâbin ve feccernâ fîhâ minel-uyûn.","وَجَعَلْنَا فِيهَا جَنَّاتٍ مِنْ نَخِيلٍ وَأَعْنَابٍ وَفَجَّرْنَا فِيهَا مِنَ الْعُيُونِ"],
+["Li-ye'kulû min semerihî ve mâ amilethu eydîhim, e fe-lâ yeşkurûn.","لِيَأْكُلُوا مِنْ ثَمَرِهِ وَمَا عَمِلَتْهُ أَيْدِيهِمْ أَفَلَا يَشْكُرُونَ"],
+["Subhânellezî halakal-ezvâce kullehâ mimmâ tunbitul-ardu ve min enfusihim ve mimmâ lâ ya'lemûn.","سُبْحَانَ الَّذِي خَلَقَ الْأَزْوَاجَ كُلَّهَا مِمَّا تُنْبِتُ الْأَرْضُ وَمِنْ أَنْفُسِهِمْ وَمِمَّا لَا يَعْلَمُونَ"],
+["Ve âyetun lehumul-leyl, neslehu minhun-nehâra fe-izâ hum muzlimûn.","وَآيَةٌ لَهُمُ اللَّيْلُ نَسْلَخُ مِنْهُ النَّهَارَ فَإِذَا هُمْ مُظْلِمُونَ"],
+["Veş-şemsu tecrî li-mustekarrin lehâ, zâlike takdîrul-azîzil-alîm.","وَالشَّمْسُ تَجْرِي لِمُسْتَقَرٍّ لَهَا ذٰلِكَ تَقْدِيرُ الْعَزِيزِ الْعَلِيمِ"],
+["Vel-kamera kaddernâhu menâzile hattâ âde kel-urcûnil-kadîm.","وَالْقَمَرَ قَدَّرْنَاهُ مَنَازِلَ حَتّٰى عَادَ كَالْعُرْجُونِ الْقَدِيمِ"],
+["Leş-şemsu yenbağî lehâ en tudrikel-kamera ve lel-leylu sâbikun-nehâr, ve kullun fî felekin yesbehûn.","لَا الشَّمْسُ يَنْبَغِي لَهَا أَنْ تُدْرِكَ الْقَمَرَ وَلَا اللَّيْلُ سَابِقُ النَّهَارِ وَكُلٌّ فِي فَلَكٍ يَسْبَحُونَ"],
+["Ve âyetun lehum ennâ hamelnâ zurriyyetehum fil-fulkil-meşhûn.","وَآيَةٌ لَهُمْ أَنَّا حَمَلْنَا ذُرِّيَّتَهُمْ فِي الْفُلْكِ الْمَشْحُونِ"],
+["Ve halaknâ lehum min mislihî mâ yerkebûn.","وَخَلَقْنَا لَهُمْ مِنْ مِثْلِهِ مَا يَرْكَبُونَ"],
+["Ve in neşe' nuğrıkhum fe-lâ sarîha lehum ve lâ hum yunkazûn.","وَإِنْ نَشَأْ نُغْرِقْهُمْ فَلَا صَرِيخَ لَهُمْ وَلَا هُمْ يُنْقَذُونَ"],
+["İllâ rahmeten minnâ ve metâan ilâ hîn.","إِلَّا رَحْمَةً مِنَّا وَمَتَاعًا إِلٰى حِينٍ"],
+["Ve izâ kîle lehumuttekû mâ beyne eydîkum ve mâ halfekum leallekum turhamûn.","وَإِذَا قِيلَ لَهُمُ اتَّقُوا مَا بَيْنَ أَيْدِيكُمْ وَمَا خَلْفَكُمْ لَعَلَّكُمْ تُرْحَمُونَ"],
+["Ve mâ te'tîhim min âyetin min âyâti rabbihim illâ kânû anhâ mu'ridîn.","وَمَا تَأْتِيهِمْ مِنْ آيَةٍ مِنْ آيَاتِ رَبِّهِمْ إِلَّا كَانُوا عَنْهَا مُعْرِضِينَ"],
+["Ve izâ kîle lehum enfikû mimmâ rezakakumullâhu kâlellezîne keferû lillezîne âmenû e nut'imu men lev yeşâullâhu at'ameh, in entum illâ fî dalâlin mubîn.","وَإِذَا قِيلَ لَهُمْ أَنْفِقُوا مِمَّا رَزَقَكُمُ اللّٰهُ قَالَ الَّذِينَ كَفَرُوا لِلَّذِينَ آمَنُوا أَنُطْعِمُ مَنْ لَوْ يَشَاءُ اللّٰهُ أَطْعَمَهُ إِنْ أَنْتُمْ إِلَّا فِي ضَلَالٍ مُبِينٍ"],
+["Ve yekûlûne metâ hâzel-va'du in kuntum sâdıkîn.","وَيَقُولُونَ مَتٰى هٰذَا الْوَعْدُ إِنْ كُنْتُمْ صَادِقِينَ"],
+["Mâ yenzurûne illâ sayhaten vâhideten te'huzuhum ve hum yahıssımûn.","مَا يَنْظُرُونَ إِلَّا صَيْحَةً وَاحِدَةً تَأْخُذُهُمْ وَهُمْ يَخِصِّمُونَ"],
+["Fe-lâ yestetîûne tavsıyeten ve lâ ilâ ehlihim yerciûn.","فَلَا يَسْتَطِيعُونَ تَوْصِيَةً وَلَا إِلٰى أَهْلِهِمْ يَرْجِعُونَ"],
+["Ve nufiha fis-sûri fe-izâ hum minel-ecdâsi ilâ rabbihim yensilûn.","وَنُفِخَ فِي الصُّورِ فَإِذَا هُمْ مِنَ الْأَجْدَاثِ إِلٰى رَبِّهِمْ يَنْسِلُونَ"],
+["Kâlû yâ veylenâ men beasenâ min merkadinâ, hâzâ mâ vaader-rahmânu ve sadekal-murselûn.","قَالُوا يَا وَيْلَنَا مَنْ بَعَثَنَا مِنْ مَرْقَدِنَا هٰذَا مَا وَعَدَ الرَّحْمٰنُ وَصَدَقَ الْمُرْسَلُونَ"],
+["İn kânet illâ sayhaten vâhideten fe-izâ hum cemîun ledeynâ muhdarûn.","إِنْ كَانَتْ إِلَّا صَيْحَةً وَاحِدَةً فَإِذَا هُمْ جَمِيعٌ لَدَيْنَا مُحْضَرُونَ"],
+["Fel-yevme lâ tuzlemu nefsun şey'en ve lâ tuczevne illâ mâ kuntum ta'melûn.","فَالْيَوْمَ لَا تُظْلَمُ نَفْسٌ شَيْئًا وَلَا تُجْزَوْنَ إِلَّا مَا كُنْتُمْ تَعْمَلُونَ"],
+["İnne ashâbel-cennetil-yevme fî şuğulin fâkihûn.","إِنَّ أَصْحَابَ الْجَنَّةِ الْيَوْمَ فِي شُغُلٍ فَاكِهُونَ"],
+["Hum ve ezvâcuhum fî zılâlin alel-erâiki muttekiûn.","هُمْ وَأَزْوَاجُهُمْ فِي ظِلَالٍ عَلَى الْأَرَائِكِ مُتَّكِئُونَ"],
+["Lehum fîhâ fâkihetun ve lehum mâ yeddeûn.","لَهُمْ فِيهَا فَاكِهَةٌ وَلَهُمْ مَا يَدَّعُونَ"],
+["Selâmun kavlen min rabbin rahîm.","سَلَامٌ قَوْلًا مِنْ رَبٍّ رَحِيمٍ"],
+["Vemtâzul-yevme eyyuhel-mucrimûn.","وَامْتَازُوا الْيَوْمَ أَيُّهَا الْمُجْرِمُونَ"],
+["E lem a'hed ileykum yâ benî âdeme en lâ ta'buduş-şeytân, innehu lekum aduvvun mubîn.","أَلَمْ أَعْهَدْ إِلَيْكُمْ يَا بَنِي آدَمَ أَنْ لَا تَعْبُدُوا الشَّيْطَانَ إِنَّهُ لَكُمْ عَدُوٌّ مُبِينٌ"],
+["Ve eni'budûnî, hâzâ sırâtun mustakîm.","وَأَنِ اعْبُدُونِي هٰذَا صِرَاطٌ مُسْتَقِيمٌ"],
+["Ve le-kad edalle minkum cibillen kesîrâ, e fe-lem tekûnû ta'kılûn.","وَلَقَدْ أَضَلَّ مِنْكُمْ جِبِلًّا كَثِيرًا أَفَلَمْ تَكُونُوا تَعْقِلُونَ"],
+["Hâzihî cehennemulletî kuntum tûadûn.","هٰذِهِ جَهَنَّمُ الَّتِي كُنْتُمْ تُوعَدُونَ"],
+["Islevhel-yevme bimâ kuntum tekfurûn.","اِصْلَوْهَا الْيَوْمَ بِمَا كُنْتُمْ تَكْفُرُونَ"],
+["El-yevme nahtimu alâ efvâhihim ve tukellimunâ eydîhim ve teşhedu erculuhum bimâ kânû yeksibûn.","اَلْيَوْمَ نَخْتِمُ عَلٰى أَفْوَاهِهِمْ وَتُكَلِّمُنَا أَيْدِيهِمْ وَتَشْهَدُ أَرْجُلُهُمْ بِمَا كَانُوا يَكْسِبُونَ"],
+["Ve lev neşâu le-tamesnâ alâ a'yunihim festebekus-sırâta fe-ennâ yubsırûn.","وَلَوْ نَشَاءُ لَطَمَسْنَا عَلٰى أَعْيُنِهِمْ فَاسْتَبَقُوا الصِّرَاطَ فَأَنّٰى يُبْصِرُونَ"],
+["Ve lev neşâu le-mesahnâhum alâ mekânetihim femestetâû mudiyyen ve lâ yerciûn.","وَلَوْ نَشَاءُ لَمَسَخْنَاهُمْ عَلٰى مَكَانَتِهِمْ فَمَا اسْتَطَاعُوا مُضِيًّا وَلَا يَرْجِعُونَ"],
+["Ve men nuammirhu nunekkishu fil-halk, e fe-lâ ya'kılûn.","وَمَنْ نُعَمِّرْهُ نُنَكِّسْهُ فِي الْخَلْقِ أَفَلَا يَعْقِلُونَ"],
+["Ve mâ allemnâhuş-şi'ra ve mâ yenbağî leh, in huve illâ zikrun ve kur'ânun mubîn.","وَمَا عَلَّمْنَاهُ الشِّعْرَ وَمَا يَنْبَغِي لَهُ إِنْ هُوَ إِلَّا ذِكْرٌ وَقُرْآنٌ مُبِينٌ"],
+["Li-yunzira men kâne hayyen ve yehıkkal-kavlu alel-kâfirîn.","لِيُنْذِرَ مَنْ كَانَ حَيًّا وَيَحِقَّ الْقَوْلُ عَلَى الْكَافِرِينَ"],
+["E ve lem yerev ennâ halaknâ lehum mimmâ amilet eydînâ en'âmen fe-hum lehâ mâlikûn.","أَوَلَمْ يَرَوْا أَنَّا خَلَقْنَا لَهُمْ مِمَّا عَمِلَتْ أَيْدِينَا أَنْعَامًا فَهُمْ لَهَا مَالِكُونَ"],
+["Ve zellelnâhâ lehum fe-minhâ rakûbuhum ve minhâ ye'kulûn.","وَذَلَّلْنَاهَا لَهُمْ فَمِنْهَا رَكُوبُهُمْ وَمِنْهَا يَأْكُلُونَ"],
+["Ve lehum fîhâ menâfiu ve meşârib, e fe-lâ yeşkurûn.","وَلَهُمْ فِيهَا مَنَافِعُ وَمَشَارِبُ أَفَلَا يَشْكُرُونَ"],
+["Vettehazû min dûnillâhi âliheten leallehum yunsarûn.","وَاتَّخَذُوا مِنْ دُونِ اللّٰهِ آلِهَةً لَعَلَّهُمْ يُنْصَرُونَ"],
+["Lâ yestetîûne nasrahum ve hum lehum cundun muhdarûn.","لَا يَسْتَطِيعُونَ نَصْرَهُمْ وَهُمْ لَهُمْ جُنْدٌ مُحْضَرُونَ"],
+["Fe-lâ yahzunke kavluhum, innâ na'lemu mâ yusirrûne ve mâ yu'linûn.","فَلَا يَحْزُنْكَ قَوْلُهُمْ إِنَّا نَعْلَمُ مَا يُسِرُّونَ وَمَا يُعْلِنُونَ"],
+["E ve lem yerel-insânu ennâ halaknâhu min nutfetin fe-izâ huve hasîmun mubîn.","أَوَلَمْ يَرَ الْإِنْسَانُ أَنَّا خَلَقْنَاهُ مِنْ نُطْفَةٍ فَإِذَا هُوَ خَصِيمٌ مُبِينٌ"],
+["Ve darabe lenâ meselen ve nesiye halkah, kâle men yuhyil-ızâme ve hiye ramîm.","وَضَرَبَ لَنَا مَثَلًا وَنَسِيَ خَلْقَهُ قَالَ مَنْ يُحْيِي الْعِظَامَ وَهِيَ رَمِيمٌ"],
+["Kul yuhyîhellezî enşeehâ evvele merreh, ve huve bi-kulli halkın alîm.","قُلْ يُحْيِيهَا الَّذِي أَنْشَأَهَا أَوَّلَ مَرَّةٍ وَهُوَ بِكُلِّ خَلْقٍ عَلِيمٌ"],
+["Ellezî ceale lekum mineş-şeceril-ahdari nâran fe-izâ entum minhu tûkıdûn.","اَلَّذِي جَعَلَ لَكُمْ مِنَ الشَّجَرِ الْأَخْضَرِ نَارًا فَإِذَا أَنْتُمْ مِنْهُ تُوقِدُونَ"],
+["E ve leysellezî halakas-semâvâti vel-arda bi-kâdirin alâ en yahluka mislehum, belâ ve huvel-hallâkul-alîm.","أَوَلَيْسَ الَّذِي خَلَقَ السَّمٰوَاتِ وَالْأَرْضَ بِقَادِرٍ عَلٰى أَنْ يَخْلُقَ مِثْلَهُمْ بَلٰى وَهُوَ الْخَلَّاقُ الْعَلِيمُ"],
+["İnnemâ emruhû izâ erâde şey'en en yekûle lehû kun fe-yekûn.","إِنَّمَا أَمْرُهُ إِذَا أَرَادَ شَيْئًا أَنْ يَقُولَ لَهُ كُنْ فَيَكُونُ"],
+["Fe-subhânellezî bi-yedihî melekûtu kulli şey'in ve ileyhi turceûn.","فَسُبْحَانَ الَّذِي بِيَدِهِ مَلَكُوتُ كُلِّ شَيْءٍ وَإِلَيْهِ تُرْجَعُونَ"]
+];
+const MULK = [
+["Tebârakellezî bi-yedihil-mulku ve huve alâ kulli şey'in kadîr.","تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلٰى كُلِّ شَيْءٍ قَدِيرٌ"],
+["Ellezî halakal-mevte vel-hayâte li-yebluvekum eyyukum ahsenu amelâ, ve huvel-azîzul-ğafûr.","اَلَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا وَهُوَ الْعَزِيزُ الْغَفُورُ"],
+["Ellezî haleka seb'a semâvâtin tıbâkâ, mâ terâ fî halkır-rahmâni min tefâvut, ferciıl-basara hel terâ min futûr.","اَلَّذِي خَلَقَ سَبْعَ سَمٰوَاتٍ طِبَاقًا مَا تَرٰى فِي خَلْقِ الرَّحْمٰنِ مِنْ تَفَاوُتٍ فَارْجِعِ الْبَصَرَ هَلْ تَرٰى مِنْ فُطُورٍ"],
+["Summerciıl-basara kerrateyni yenkalib ileykel-basaru hâsien ve huve hasîr.","ثُمَّ ارْجِعِ الْبَصَرَ كَرَّتَيْنِ يَنْقَلِبْ إِلَيْكَ الْبَصَرُ خَاسِئًا وَهُوَ حَسِيرٌ"],
+["Ve lekad zeyyennes-semâed-dunyâ bi-mesâbîha ve cealnâhâ rucûmen liş-şeyâtîni ve a'tednâ lehum azâbes-saîr.","وَلَقَدْ زَيَّنَّا السَّمَاءَ الدُّنْيَا بِمَصَابِيحَ وَجَعَلْنَاهَا رُجُومًا لِلشَّيَاطِينِ وَأَعْتَدْنَا لَهُمْ عَذَابَ السَّعِيرِ"],
+["Ve lillezîne keferû bi-rabbihim azâbu cehennem, ve bi'sel-masîr.","وَلِلَّذِينَ كَفَرُوا بِرَبِّهِمْ عَذَابُ جَهَنَّمَ وَبِئْسَ الْمَصِيرُ"],
+["İzâ ulkû fîhâ semiû lehâ şehîkan ve hiye tefûr.","إِذَا أُلْقُوا فِيهَا سَمِعُوا لَهَا شَهِيقًا وَهِيَ تَفُورُ"],
+["Tekâdu temeyyezu minel-ğayz, kullemâ ulkıye fîhâ fevcun seelehum hazenetuhâ e lem ye'tikum nezîr.","تَكَادُ تَمَيَّزُ مِنَ الْغَيْظِ كُلَّمَا أُلْقِيَ فِيهَا فَوْجٌ سَأَلَهُمْ خَزَنَتُهَا أَلَمْ يَأْتِكُمْ نَذِيرٌ"],
+["Kâlû belâ kad câenâ nezîrun fe-kezzebnâ ve kulnâ mâ nezzelallâhu min şey', in entum illâ fî dalâlin kebîr.","قَالُوا بَلٰى قَدْ جَاءَنَا نَذِيرٌ فَكَذَّبْنَا وَقُلْنَا مَا نَزَّلَ اللّٰهُ مِنْ شَيْءٍ إِنْ أَنْتُمْ إِلَّا فِي ضَلَالٍ كَبِيرٍ"],
+["Ve kâlû lev kunnâ nesmeu ev na'kılu mâ kunnâ fî ashâbis-saîr.","وَقَالُوا لَوْ كُنَّا نَسْمَعُ أَوْ نَعْقِلُ مَا كُنَّا فِي أَصْحَابِ السَّعِيرِ"],
+["Fa'terafû bi-zenbihim, fe-suhkan li-ashâbis-saîr.","فَاعْتَرَفُوا بِذَنْبِهِمْ فَسُحْقًا لِأَصْحَابِ السَّعِيرِ"],
+["İnnellezîne yahşevne rabbehum bil-ğaybi lehum mağfiretun ve ecrun kebîr.","إِنَّ الَّذِينَ يَخْشَوْنَ رَبَّهُمْ بِالْغَيْبِ لَهُمْ مَغْفِرَةٌ وَأَجْرٌ كَبِيرٌ"],
+["Ve esirrû kavlekum evicherû bih, innehu alîmun bi-zâtis-sudûr.","وَأَسِرُّوا قَوْلَكُمْ أَوِ اجْهَرُوا بِهِ إِنَّهُ عَلِيمٌ بِذَاتِ الصُّدُورِ"],
+["E lâ ya'lemu men halak, ve huvel-latîful-habîr.","أَلَا يَعْلَمُ مَنْ خَلَقَ وَهُوَ اللَّطِيفُ الْخَبِيرُ"],
+["Huvellezî ceale lekumul-arda zelûlen femşû fî menâkibihâ ve kulû min rızkıh, ve ileyhin-nuşûr.","هُوَ الَّذِي جَعَلَ لَكُمُ الْأَرْضَ ذَلُولًا فَامْشُوا فِي مَنَاكِبِهَا وَكُلُوا مِنْ رِزْقِهِ وَإِلَيْهِ النُّشُورُ"],
+["E emintum men fis-semâi en yahsife bikumul-arda fe-izâ hiye temûr.","أَأَمِنْتُمْ مَنْ فِي السَّمَاءِ أَنْ يَخْسِفَ بِكُمُ الْأَرْضَ فَإِذَا هِيَ تَمُورُ"],
+["Em emintum men fis-semâi en yursile aleykum hâsıbâ, fe-se ta'lemûne keyfe nezîr.","أَمْ أَمِنْتُمْ مَنْ فِي السَّمَاءِ أَنْ يُرْسِلَ عَلَيْكُمْ حَاصِبًا فَسَتَعْلَمُونَ كَيْفَ نَذِيرِ"],
+["Ve lekad kezzebellezîne min kablihim fe-keyfe kâne nekîr.","وَلَقَدْ كَذَّبَ الَّذِينَ مِنْ قَبْلِهِمْ فَكَيْفَ كَانَ نَكِيرِ"],
+["E ve lem yerev ilet-tayri fevkahum sâffâtin ve yakbıdn, mâ yumsikuhunne iller-rahmân, innehu bi-kulli şey'in basîr.","أَوَلَمْ يَرَوْا إِلَى الطَّيْرِ فَوْقَهُمْ صَافَّاتٍ وَيَقْبِضْنَ مَا يُمْسِكُهُنَّ إِلَّا الرَّحْمٰنُ إِنَّهُ بِكُلِّ شَيْءٍ بَصِيرٌ"],
+["Emmen hâzellezî huve cundun lekum yensurukum min dûnir-rahmân, inil-kâfirûne illâ fî ğurûr.","أَمَّنْ هٰذَا الَّذِي هُوَ جُنْدٌ لَكُمْ يَنْصُرُكُمْ مِنْ دُونِ الرَّحْمٰنِ إِنِ الْكَافِرُونَ إِلَّا فِي غُرُورٍ"],
+["Emmen hâzellezî yerzukukum in emseke rızkah, bel leccû fî utuvvin ve nufûr.","أَمَّنْ هٰذَا الَّذِي يَرْزُقُكُمْ إِنْ أَمْسَكَ رِزْقَهُ بَلْ لَجُّوا فِي عُتُوٍّ وَنُفُورٍ"],
+["E fe-men yemşî mukibben alâ vechihî ehdâ emmen yemşî seviyyen alâ sırâtın mustakîm.","أَفَمَنْ يَمْشِي مُكِبًّا عَلٰى وَجْهِهِ أَهْدٰى أَمَّنْ يَمْشِي سَوِيًّا عَلٰى صِرَاطٍ مُسْتَقِيمٍ"],
+["Kul huvellezî enşeekum ve ceale lekumus-sem'a vel-ebsâra vel-ef'ideh, kalîlen mâ teşkurûn.","قُلْ هُوَ الَّذِي أَنْشَأَكُمْ وَجَعَلَ لَكُمُ السَّمْعَ وَالْأَبْصَارَ وَالْأَفْئِدَةَ قَلِيلًا مَا تَشْكُرُونَ"],
+["Kul huvellezî zeraekum fil-ardı ve ileyhi tuhşerûn.","قُلْ هُوَ الَّذِي ذَرَأَكُمْ فِي الْأَرْضِ وَإِلَيْهِ تُحْشَرُونَ"],
+["Ve yekûlûne metâ hâzel-va'du in kuntum sâdıkîn.","وَيَقُولُونَ مَتٰى هٰذَا الْوَعْدُ إِنْ كُنْتُمْ صَادِقِينَ"],
+["Kul innemel-ilmu indallâh, ve innemâ ene nezîrun mubîn.","قُلْ إِنَّمَا الْعِلْمُ عِنْدَ اللّٰهِ وَإِنَّمَا أَنَا نَذِيرٌ مُبِينٌ"],
+["Fe-lemmâ raevhu zulfeten sîet vucûhullezîne keferû ve kîle hâzellezî kuntum bihî teddeûn.","فَلَمَّا رَأَوْهُ زُلْفَةً سِيئَتْ وُجُوهُ الَّذِينَ كَفَرُوا وَقِيلَ هٰذَا الَّذِي كُنْتُمْ بِهِ تَدَّعُونَ"],
+["Kul e raeytum in ehlekeniyallâhu ve men maıye ev rahımenâ fe-men yucîrul-kâfirîne min azâbin elîm.","قُلْ أَرَأَيْتُمْ إِنْ أَهْلَكَنِيَ اللّٰهُ وَمَنْ مَعِيَ أَوْ رَحِمَنَا فَمَنْ يُجِيرُ الْكَافِرِينَ مِنْ عَذَابٍ أَلِيمٍ"],
+["Kul huver-rahmânu âmennâ bihî ve aleyhi tevekkelnâ, fe-se ta'lemûne men huve fî dalâlin mubîn.","قُلْ هُوَ الرَّحْمٰنُ آمَنَّا بِهِ وَعَلَيْهِ تَوَكَّلْنَا فَسَتَعْلَمُونَ مَنْ هُوَ فِي ضَلَالٍ مُبِينٍ"],
+["Kul e raeytum in asbaha mâukum ğavran fe-men ye'tîkum bi-mâin maîn.","قُلْ أَرَأَيْتُمْ إِنْ أَصْبَحَ مَاؤُكُمْ غَوْرًا فَمَنْ يَأْتِيكُمْ بِمَاءٍ مَعِينٍ"]
+];
+const AD = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+function suraCards(sura, ranges, name){
+  return ranges.map(([a, b]) => {
+    const vs = sura.slice(a - 1, b);
+    let t = "", ar = "";
+    if (a === 1) { t = "Bismillâh-ir-Rahmân-ir-Rahîm\n"; ar = "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\n"; }
+    t += vs.map((v, k) => v[0] + " (" + (a + k) + ")").join(" ");
+    ar += vs.map((v, k) => v[1] + " ﴿" + AD(a + k) + "﴾").join(" ");
+    return { t, a: ar, n: 1, lbl: name + " " + a + "–" + b, note: name + " · " + a + "–" + b + ". âyetler" };
+  });
+}
+const YAMELIK = { t: "Allahümme salli alâ seyyidina Muhammedin ve alâ âl-i Muhammedin ve sahbihî ve sellim", a: SALLI, n: 33 };
+const DAILY = [
+ { h: "Sabah Namazından Sonra", items: [
+   { t: "Bismillâh-ir-Rahmân-ir-Rahîm\nKul hüvallahü ahad Allah-üs-samed lem yelid ve lem yûled ve lem yekün lehu küfüven ahad", a: "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيمِ\nقُلْ هُوَ اللّٰهُ أَحَدٌ * اَللّٰهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ", n: 33, note: "İhlâs-ı Şerîf", lbl: "Sabah namazından sonra" },
+   ...suraCards(YASIN, [[1,12],[13,32],[33,50],[51,67],[68,83]], "Yâsîn-i Şerîf")
+ ]},
+ { h: "İkindi Namazından Sonra", items: [ Object.assign({}, YAMELIK, { lbl: "İkindi namazından sonra" }) ]},
+ { h: "Akşam Namazından Sonra", items: [
+   { t: "Estağfirullah", a: "أَسْتَغْفِرُ اللّٰهَ", n: 33, lbl: "Akşam namazından sonra" },
+   ...suraCards(MULK, [[1,14],[15,30]], "Mülk Sûresi")
+ ]}
+];
+
+// Akşam virdi kartlarına Arapça ve "Kart n" numarası
+let kno = 0;
+SECTIONS.forEach(sec => sec.items.forEach(it => { it.a = AR[kno]; it.lbl = "Kart " + (++kno); }));
+const GROUPS = [
+  { id: "gunluk", title: "Günlük Evrâd", sections: DAILY },
+  { id: "vird", title: "Akşam Virdi", sections: SECTIONS }
+];
+const KEY = "aksamVirdi.v2";
+const items = [];
+GROUPS.forEach(g => g.sections.forEach(sec => sec.items.forEach(it => { it.g = g.id; items.push(it); })));
+// Gün, gece 03:00'te değişir; böylece gece yarısını geçen bir vird yarıda sıfırlanmaz.
+const dayKey = () => new Date(Date.now() - 3 * 3600e3).toDateString();
+let today = dayKey();
+let counts = items.map(() => 0), fs = 19, active = "vird", arFirst = false, stamp = 0;
+function apply(saved, withCounts){
+  if (!saved) return false;
+  if (saved.fs) fs = saved.fs;
+  if (saved.g) active = saved.g;
+  arFirst = !!saved.af;
+  if (withCounts && saved.d === today && Array.isArray(saved.c) && saved.c.length === items.length) {
+    counts = saved.c.slice(); stamp = saved.t || 0; return true;
+  }
+  return false;
+}
+function readLocal(){
+  for (const store of ["localStorage", "sessionStorage"]) {
+    try { const v = JSON.parse(window[store].getItem(KEY) || "null"); if (v) return v; } catch (e) {}
+  }
+  return null;
+}
+apply(readLocal(), true);
+function state(){ return { c: counts, fs, g: active, d: today, af: arFirst, t: stamp }; }
+let remote = null, remoteTimer = 0, remoteBusy = false, remoteDirty = false;
+function pushRemote(){
+  if (!remote) return;
+  clearTimeout(remoteTimer);
+  remoteTimer = setTimeout(async function go(){
+    if (remoteBusy) { remoteDirty = true; return; }
+    remoteBusy = true;
+    try { await remote.set(state()); } catch (e) {}
+    remoteBusy = false;
+    if (remoteDirty) { remoteDirty = false; go(); }
+  }, 1200);
+}
+function save(){
+  stamp = Date.now();
+  const v = JSON.stringify(state());
+  try { localStorage.setItem(KEY, v); } catch (e) {}
+  try { sessionStorage.setItem(KEY, v); } catch (e) {}
+  pushRemote();
+}
+
+const els = [];
+let idx = 0;
+GROUPS.forEach(g => {
+  const list = document.getElementById("list-" + g.id);
+  g.sections.forEach(sec => {
+    const wrap = document.createElement("section");
+    wrap.className = "sec";
+    const h = document.createElement("h2");
+    h.textContent = sec.h;
+    wrap.appendChild(h);
+    sec.items.forEach(it => {
+      const i = idx++;
+      const art = document.createElement("article");
+      art.className = "item";
+      art.id = "b" + i;
+      const txt = document.createElement("div");
+      txt.className = "txt";
+      txt.textContent = it.t;
+      const ctl = document.createElement("div");
+      ctl.className = "ctl";
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tap";
+      btn.id = "tap" + i;
+      const undo = document.createElement("button");
+      undo.type = "button";
+      undo.className = "undo";
+      undo.id = "undo" + i;
+      undo.textContent = "geri al";
+      ctl.append(btn, undo);
+      const no = document.createElement("span");
+      no.className = "no";
+      no.textContent = it.lbl || "";
+      art.append(no, txt, ctl);
+      if (it.note) {
+        const n = document.createElement("div");
+        n.className = "note";
+        n.textContent = it.note;
+        art.appendChild(n);
+      }
+      if (it.a) {
+        const ar = document.createElement("div");
+        ar.className = "ar";
+        ar.dir = "rtl";
+        ar.lang = "ar";
+        it.a.split(" * ").forEach((part, k, all) => {
+          ar.appendChild(document.createTextNode(part));
+          if (k < all.length - 1) { const d = document.createElement("span"); d.className = "ay"; ar.appendChild(d); }
+        });
+        art.appendChild(ar);
+      }
+      btn.addEventListener("click", () => tap(i));
+      undo.addEventListener("click", () => { if (counts[i] > 0) { counts[i]--; save(); render(); } });
+      wrap.appendChild(art);
+      els.push({ art, btn, undo });
+    });
+    list.appendChild(wrap);
+  });
+});
+
+function tap(i){
+  const n = items[i].n;
+  if (counts[i] >= n) return;
+  counts[i]++;
+  try { navigator.vibrate && navigator.vibrate(counts[i] === n ? [20, 40, 20] : 8); } catch (e) {}
+  save();
+  render();
+  if (counts[i] === n) {
+    const next = counts.findIndex((c, k) => k > i && items[k].g === items[i].g && c < items[k].n);
+    if (next !== -1) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(() => els[next].art.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" }), 250);
+    }
+  }
+}
+
+
+const SEAL = '<svg class="seal" viewBox="-12 -12 24 24" aria-hidden="true"><g fill="#FFCD28">' +
+  [0,45,90,135,180,225,270,315].map(r => '<ellipse cx="0" cy="-6.4" rx="2.6" ry="4.6" transform="rotate(' + r + ')"/>').join("") +
+  '</g><circle r="3.6" fill="#FFF6D6"/><circle r="1.6" fill="#D29B12"/></svg>';
+function beads(c, n){
+  const b = Math.min(n, 33), filled = n <= 33 ? c : Math.floor(c / n * 33), r = b > 12 ? 2.3 : 3.3;
+  let out = '<svg class="beads" viewBox="0 0 96 96" aria-hidden="true">';
+  for (let k = 0; k < b; k++) {
+    const a = -Math.PI / 2 + k * 2 * Math.PI / b;
+    out += '<circle cx="' + (48 + 44 * Math.cos(a)).toFixed(2) + '" cy="' + (48 + 44 * Math.sin(a)).toFixed(2) + '" r="' + r + '" fill="' + (k < filled ? "#E0A91B" : "#E9DCAE") + '"/>';
+  }
+  return out + "</svg>";
+}
+function render(){
+  document.documentElement.style.setProperty("--fs", fs + "px");
+  document.body.classList.toggle("arfirst", arFirst);
+  const ab = document.getElementById("arbtn");
+  ab.classList.toggle("on", arFirst);
+  ab.setAttribute("aria-pressed", arFirst ? "true" : "false");
+  GROUPS.forEach(g => {
+    const on = g.id === active;
+    document.getElementById("p-" + g.id).hidden = !on;
+    document.getElementById("tab-" + g.id).setAttribute("aria-selected", on ? "true" : "false");
+  });
+  const current = {};
+  let doneCount = 0, total = 0;
+  els.forEach((e, i) => {
+    const it = items[i], n = it.n, c = counts[i], done = c >= n;
+    if (it.g === active) { total++; if (done) doneCount++; }
+    if (!done && current[it.g] === undefined) current[it.g] = i;
+    e.art.classList.toggle("done", done);
+    e.undo.hidden = c === 0;
+    if (n === 1) {
+      e.btn.innerHTML = done ? SEAL : '<span class="once">Okudum</span>';
+      e.btn.setAttribute("aria-label", done ? "Okundu" : "Okudum olarak işaretle");
+    } else {
+      e.btn.innerHTML = done
+        ? SEAL
+        : beads(c, n) + '<span class="num">' + c + '</span><span class="of">/ ' + n + "</span>";
+      e.btn.setAttribute("aria-label", c + " / " + n + ", saymak için dokunun");
+    }
+  });
+  els.forEach((e, i) => e.art.classList.toggle("current", current[items[i].g] === i));
+  document.getElementById("ptitle").textContent = GROUPS.find(g => g.id === active).title;
+  document.getElementById("pn").textContent = doneCount;
+  document.getElementById("pt").textContent = total;
+  document.getElementById("fill").style.width = (total ? doneCount / total * 100 : 0) + "%";
+  document.getElementById("bitti").hidden = doneCount !== total;
+}
+
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  active = t.dataset.g; save(); render();
+  const bar = document.getElementById("sekme");
+  if (bar.getBoundingClientRect().top > 1) return;
+  bar.scrollIntoView({ block: "start" });
+}));
+document.getElementById("arbtn").addEventListener("click", () => { arFirst = !arFirst; save(); render(); });
+document.getElementById("bigger").addEventListener("click", () => { fs = Math.min(28, fs + 2); save(); render(); });
+document.getElementById("smaller").addEventListener("click", () => { fs = Math.max(15, fs - 2); save(); render(); });
+const resetBtn = document.getElementById("reset"), conf = document.getElementById("confirm");
+resetBtn.addEventListener("click", () => { resetBtn.hidden = true; conf.hidden = false; });
+document.getElementById("resetNo").addEventListener("click", () => { conf.hidden = true; resetBtn.hidden = false; });
+document.getElementById("resetYes").addEventListener("click", () => {
+  counts = counts.map((c, i) => items[i].g === active ? 0 : c); save(); render();
+  conf.hidden = true; resetBtn.hidden = false;
+  document.getElementById("sekme").scrollIntoView({ block: "start" });
+});
+
+render();
+
+function resume(){
+  const i = counts.findIndex((c, k) => items[k].g === active && c < items[k].n);
+  const started = counts.some((c, k) => items[k].g === active && c > 0);
+  if (!started || i === -1) return;
+  setTimeout(() => els[i].art.scrollIntoView({ block: "center" }), 150);
+}
+resume();
+
+// Gün değiştiyse (sayfa açık kalmışsa) sayaçları sıfırla
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") { try { localStorage.setItem(KEY, JSON.stringify(state())); } catch (e) {} return; }
+  if (dayKey() !== today) { today = dayKey(); counts = items.map(() => 0); save(); render(); }
+});
+
+// Çevrimdışı çalışma
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+}
+</script>
+
+</body>
+</html>
