@@ -133,6 +133,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cover-row a{color:var(--cover-ink);background:var(--cover-gold);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:999px}
 .cover-row a:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
 .ses{position:absolute;z-index:2;right:max(14px,env(safe-area-inset-right,0px));bottom:22px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,205,40,.6);background:rgba(12,30,29,.45);color:var(--cover-gold);font:600 15px/1 var(--f-ui);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.sesayar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.sesbtn{font-family:var(--f-ui);font-size:14px;font-weight:500;padding:8px 14px;border-radius:999px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.seshint{font-size:12.5px;color:var(--muted)}
+#sesbilgi{font-size:13px;color:var(--olive)}
 .ses:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
 
 
@@ -216,6 +220,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <button id="resetNo" type="button">Vazgeç</button>
     </div>
     <div>Sayaçlar her gün kendiliğinden sıfırlanır.</div>
+    <div class="sesayar">
+      <label class="sesbtn" for="sesdosya">♪ Giriş sesi seç</label>
+      <input id="sesdosya" type="file" accept="audio/*" hidden>
+      <button class="sesbtn" id="seskaldir" type="button" hidden>Giriş sesini kaldır</button>
+      <span id="sesbilgi"></span>
+    </div>
+    <div class="seshint">Seçtiğin ses sadece bu telefonda saklanır, hiçbir yere yüklenmez.</div>
   </div>
 </main>
 
@@ -671,17 +682,36 @@ document.addEventListener("visibilitychange", () => {
 
 // Çevrimdışı çalışma
 
-// Giriş sesi: giris.mp3 varsa, açılışta (ya da ilk dokunuşta) yavaşça açılır, sonra kısılarak kapanır
+// Giriş sesi: kişinin kendi telefonundan seçtiği ses (yalnızca bu cihazda, IndexedDB'de saklanır).
+// Açılışta (ya da ilk dokunuşta) yavaşça açılır, 20 sn çalar, kısılarak kapanır.
 (function(){
   const SURE = 20, ACILIS = 2, KAPANIS = 6, SES = 0.8;
   const btn = document.getElementById("ses");
+  const dosya = document.getElementById("sesdosya");
+  const kaldir = document.getElementById("seskaldir");
+  const bilgi = document.getElementById("sesbilgi");
   let kapali = false;
   try { kapali = localStorage.getItem("girisSesi") === "kapali"; } catch (e) {}
-  const a = new Audio("giris.mp3");
+  function idb(){
+    return new Promise((ok, no) => {
+      try {
+        const r = indexedDB.open("aksamVirdi", 1);
+        r.onupgradeneeded = () => r.result.createObjectStore("ses");
+        r.onsuccess = () => ok(r.result);
+        r.onerror = () => no(r.error);
+      } catch (e) { no(e); }
+    });
+  }
+  async function oku(){ const d = await idb(); return new Promise(ok => { const q = d.transaction("ses").objectStore("ses").get("giris"); q.onsuccess = () => ok(q.result || null); q.onerror = () => ok(null); }); }
+  async function yaz(v){ const d = await idb(); return new Promise((ok, no) => { const t = d.transaction("ses", "readwrite"); v ? t.objectStore("ses").put(v, "giris") : t.objectStore("ses").delete("giris"); t.oncomplete = ok; t.onerror = () => no(t.error); }); }
+
+  const a = new Audio();
   a.preload = "auto";
-  let basladi = false, bitti = false, raf = 0, t0 = 0;
+  let url = null, basladi = false, bitti = false, raf = 0, t0 = 0;
   function goster(){
-    btn.hidden = false;
+    const var1 = !!url;
+    btn.hidden = !var1;
+    kaldir.hidden = !var1;
     btn.textContent = kapali ? "🔇" : "🔊";
     btn.setAttribute("aria-pressed", kapali ? "true" : "false");
     btn.setAttribute("aria-label", kapali ? "Giriş sesini aç" : "Giriş sesini kapat");
@@ -696,7 +726,7 @@ document.addEventListener("visibilitychange", () => {
     raf = requestAnimationFrame(adim);
   }
   function cal(){
-    if (kapali || basladi || bitti) return;
+    if (!url || kapali || basladi || bitti) return;
     a.volume = 0;
     a.play().then(() => {
       basladi = true; t0 = performance.now(); raf = requestAnimationFrame(adim);
@@ -704,10 +734,33 @@ document.addEventListener("visibilitychange", () => {
       document.removeEventListener("keydown", cal, true);
     }).catch(() => {});
   }
-  a.addEventListener("canplay", () => { goster(); cal(); }, { once: true });
-  a.addEventListener("error", () => { btn.hidden = true; });
+  function kur(blob){
+    if (url) URL.revokeObjectURL(url);
+    url = blob ? URL.createObjectURL(blob) : null;
+    if (url) { a.src = url; a.load(); } else { a.removeAttribute("src"); }
+    goster();
+  }
+  oku().then(r => { if (r && r.blob) { kur(r.blob); bilgi.textContent = r.ad ? "Seçili: " + r.ad : ""; cal(); } else goster(); }).catch(() => goster());
   document.addEventListener("pointerdown", cal, true);
   document.addEventListener("keydown", cal, true);
+
+  dosya.addEventListener("change", async () => {
+    const f = dosya.files && dosya.files[0];
+    if (!f) return;
+    try {
+      await yaz({ blob: f, ad: f.name });
+      kur(f);
+      bilgi.textContent = "Seçili: " + f.name;
+      kapali = false; try { localStorage.setItem("girisSesi", "acik"); } catch (e) {}
+      basladi = false; bitti = false; cancelAnimationFrame(raf); a.currentTime = 0; cal();
+    } catch (e) { bilgi.textContent = "Ses kaydedilemedi, tekrar dene."; }
+    dosya.value = "";
+  });
+  kaldir.addEventListener("click", async () => {
+    cancelAnimationFrame(raf); a.pause();
+    try { await yaz(null); } catch (e) {}
+    kur(null); bilgi.textContent = "Giriş sesi kaldırıldı.";
+  });
   btn.addEventListener("click", e => {
     e.stopPropagation();
     kapali = !kapali;
