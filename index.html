@@ -222,7 +222,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div>Sayaçlar her gün kendiliğinden sıfırlanır.</div>
     <div class="sesayar">
       <label class="sesbtn" for="sesdosya">♪ Giriş sesi seç</label>
-      <input id="sesdosya" type="file" accept="audio/*" hidden>
+      <input id="sesdosya" type="file" hidden>
       <button class="sesbtn" id="seskaldir" type="button" hidden>Giriş sesini kaldır</button>
       <span id="sesbilgi"></span>
     </div>
@@ -746,6 +746,11 @@ document.addEventListener("visibilitychange", () => {
   dosya.addEventListener("change", async () => {
     const f = dosya.files && dosya.files[0];
     if (!f) return;
+    if (!(/^audio\//.test(f.type) || /\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name))) {
+      bilgi.textContent = "Bu bir ses dosyası değil. mp3 ya da m4a seç.";
+      dosya.value = "";
+      return;
+    }
     try {
       await yaz({ blob: f, ad: f.name });
       kur(f);
