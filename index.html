@@ -199,7 +199,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <dl class="vakit">
       <dt>Sabah namazından sonra</dt><dd>33 İhlâs-ı Şerîf, Yâsîn-i Şerîf</dd>
       <dt>İkindi namazından sonra</dt><dd>33 Salavât-ı Şerîfe</dd>
-      <dt>Akşam namazından sonra</dt><dd>33 Estağfirullah, Mülk Sûresi</dd>
+      <dt>Akşam namazından sonra</dt><dd>33 Estağfirullah</dd>
     </dl>
     <div class="list" id="list-gunluk"></div>
   </div>
@@ -463,8 +463,7 @@ const DAILY = [
  ]},
  { h: "İkindi Namazından Sonra", items: [ Object.assign({}, YAMELIK, { lbl: "İkindi namazından sonra" }) ]},
  { h: "Akşam Namazından Sonra", items: [
-   { t: "Estağfirullah", a: "أَسْتَغْفِرُ اللّٰهَ", n: 33, lbl: "Akşam namazından sonra" },
-   ...suraCards(MULK, [[1,14],[15,30]], "Mülk Sûresi")
+   { t: "Estağfirullah", a: "أَسْتَغْفِرُ اللّٰهَ", n: 33, lbl: "Akşam namazından sonra" }
  ]}
 ];
 
@@ -685,7 +684,7 @@ document.addEventListener("visibilitychange", () => {
 // Giriş sesi: kişinin kendi telefonundan seçtiği ses (yalnızca bu cihazda, IndexedDB'de saklanır).
 // Açılışta (ya da ilk dokunuşta) yavaşça açılır, 20 sn çalar, kısılarak kapanır.
 (function(){
-  const SURE = 20, ACILIS = 2, KAPANIS = 6, SES = 0.8;
+  const SURE = 25, ACILIS = 3, KAPANIS = 8, SES = 0.7;
   const btn = document.getElementById("ses");
   const dosya = document.getElementById("sesdosya");
   const kaldir = document.getElementById("seskaldir");
