@@ -132,6 +132,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cover-row{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--f-ui);font-size:12.5px;letter-spacing:.04em}
 .cover-row a{color:var(--cover-ink);background:var(--cover-gold);text-decoration:none;font-weight:600;font-size:14px;padding:9px 16px;border-radius:999px}
 .cover-row a:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
+.ses{position:absolute;z-index:2;right:max(14px,env(safe-area-inset-right,0px));bottom:22px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,205,40,.6);background:rgba(12,30,29,.45);color:var(--cover-gold);font:600 15px/1 var(--f-ui);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ses:focus-visible{outline:2px solid var(--cover-light);outline-offset:3px}
 
 
 /* Arapça önde */
@@ -157,6 +159,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 <body>
 
 <section class="cover" aria-label="Kapak">
+  <button class="ses" id="ses" type="button" hidden aria-pressed="false" aria-label="Giriş sesini kapat">🔊</button>
   <div class="cover-in">
     <div class="issue"><span>Günlük Evrâd</span><span>Akşam Virdi</span></div>
     <img class="tac" src="tac.webp" alt="Yâ Hazret-i Pîr Seyyid Sultan Muhammed Nûreddîn el-Cerrâhî kaddesallâhu sırrahu'l-Fettâhî">
@@ -667,6 +670,53 @@ document.addEventListener("visibilitychange", () => {
 });
 
 // Çevrimdışı çalışma
+
+// Giriş sesi: giris.mp3 varsa, açılışta (ya da ilk dokunuşta) yavaşça açılır, sonra kısılarak kapanır
+(function(){
+  const SURE = 20, ACILIS = 2, KAPANIS = 6, SES = 0.8;
+  const btn = document.getElementById("ses");
+  let kapali = false;
+  try { kapali = localStorage.getItem("girisSesi") === "kapali"; } catch (e) {}
+  const a = new Audio("giris.mp3");
+  a.preload = "auto";
+  let basladi = false, bitti = false, raf = 0, t0 = 0;
+  function goster(){
+    btn.hidden = false;
+    btn.textContent = kapali ? "🔇" : "🔊";
+    btn.setAttribute("aria-pressed", kapali ? "true" : "false");
+    btn.setAttribute("aria-label", kapali ? "Giriş sesini aç" : "Giriş sesini kapat");
+  }
+  function adim(now){
+    const t = (now - t0) / 1000;
+    let v = SES;
+    if (t < ACILIS) v = SES * t / ACILIS;
+    else if (t > SURE - KAPANIS) v = SES * Math.max(0, (SURE - t) / KAPANIS);
+    a.volume = Math.max(0, Math.min(1, v));
+    if (t >= SURE || a.ended) { a.pause(); bitti = true; return; }
+    raf = requestAnimationFrame(adim);
+  }
+  function cal(){
+    if (kapali || basladi || bitti) return;
+    a.volume = 0;
+    a.play().then(() => {
+      basladi = true; t0 = performance.now(); raf = requestAnimationFrame(adim);
+      document.removeEventListener("pointerdown", cal, true);
+      document.removeEventListener("keydown", cal, true);
+    }).catch(() => {});
+  }
+  a.addEventListener("canplay", () => { goster(); cal(); }, { once: true });
+  a.addEventListener("error", () => { btn.hidden = true; });
+  document.addEventListener("pointerdown", cal, true);
+  document.addEventListener("keydown", cal, true);
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    kapali = !kapali;
+    try { localStorage.setItem("girisSesi", kapali ? "kapali" : "acik"); } catch (er) {}
+    if (kapali) { cancelAnimationFrame(raf); a.pause(); bitti = true; }
+    goster();
+  });
+})();
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
 }
